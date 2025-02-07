@@ -12,5 +12,20 @@ spring:
       properties:
         spring.json.trusted.packages: "*"
 
+  datasource:
+    url: jdbc:h2:mem:midasdb  # ✅ In-memory H2 database
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update  # ✅ Automatically updates schema
+
+  h2:
+    console:
+      enabled: true  # ✅ Enables H2 web console
+
 general:
   kafka-topic: transactions
