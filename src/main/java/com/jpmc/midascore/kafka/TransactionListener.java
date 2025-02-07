@@ -41,7 +41,7 @@ public class TransactionListener {
                 userRepository.save(recipient);
 
                 // Save transaction record
-                TransactionRecord record = new TransactionRecord(sender, recipient, transaction.getAmount());
+                TransactionRecord record = new TransactionRecord(sender, recipient, transaction.getAmount(), 0);
                 transactionRepository.save(record);
 
                 System.out.println("✅ Transaction recorded: " + record.getSender() + " Balance: " + transaction.getAmount());

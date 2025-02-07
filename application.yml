@@ -27,5 +27,9 @@ spring:
     console:
       enabled: true  # ✅ Enables H2 web console
 
+server:
+  port: 33400  # ✅ Set application to run on port 33400
+
+
 general:
   kafka-topic: transactions
