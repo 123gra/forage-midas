@@ -1,6 +1,7 @@
 package com.jpmc.midascore;
 
 import com.jpmc.midascore.foundation.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class KafkaProducer {
     private final String topic;
+    @Autowired
     private final KafkaTemplate<String, Transaction> kafkaTemplate;
 
     public KafkaProducer(@Value("${general.kafka-topic}") String topic, KafkaTemplate<String, Transaction> kafkaTemplate) {
