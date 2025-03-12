@@ -25,3 +25,6 @@ spring:
       spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
       hibernate:
         ddl-auto: update
+
+server:
+  port: 33400

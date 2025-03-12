@@ -47,13 +47,14 @@ public class KafkaConsumer {
                 userRepository.save(sender);
                 userRepository.save(recipient);
 
-                TransactionRecord transactionRecord = new TransactionRecord(sender, recipient, transaction.getAmount());
+                TransactionRecord transactionRecord = new TransactionRecord(sender, recipient, transaction.getAmount(), 0);
                 transactionRepository.save(transactionRecord);
 
-                System.out.println("Transaction recorded - FROM:" + sender.getName() + " TO:" + recipient.getName() + " SENDER_BALANCE: " + sender.getBalance() + " RECIPIENT_BALANCE: " + recipient.getBalance());
-            } else {
-                System.out.println("Transaction failed: Insufficient balance for sender ID " + sender.getId());
+                //System.out.println("Transaction recorded - FROM:" + sender.getName() + " TO:" + recipient.getName() + " SENDER_BALANCE: " + sender.getBalance() + " RECIPIENT_BALANCE: " + recipient.getBalance());
             }
+//            else {
+//                System.out.println("Transaction failed: Insufficient balance for sender ID " + sender.getId());
+//            }
         } else {
             System.out.println("Transaction failed: Invalid sender or recipient ID.");
         }

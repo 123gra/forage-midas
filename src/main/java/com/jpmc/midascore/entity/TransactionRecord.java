@@ -11,37 +11,46 @@ public class TransactionRecord {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "sender_id", nullable = false)
-    private UserRecord senderId;
+    @JoinColumn(name = "sender", nullable = false)
+    private UserRecord sender;
 
     @ManyToOne
-    @JoinColumn(name = "recipient_id", nullable = false)
-    private UserRecord recipientId;
+    @JoinColumn(name = "recipient", nullable = false)
+    private UserRecord recipient;
 
+    @Column(nullable = false)
     private float amount;
+
+    @Column(nullable = false)
+    private float incentive;
 
     protected TransactionRecord() {
     }
 
-    public TransactionRecord(UserRecord senderId, UserRecord recipientId, float amount) {
-        this.senderId = senderId;
-        this.recipientId = recipientId;
+    public TransactionRecord(UserRecord sender, UserRecord recipient, float amount, float incentive) {
+        this.sender = sender;
+        this.recipient = recipient;
         this.amount = amount;
+        this.incentive = incentive;
     }
+
+    public float getIncentive() { return incentive; }
+
+    public void setIncentive(float incentive) { this.incentive = incentive; }
 
     @Override
     public String toString() {
-        return String.format("Transaction[id=%d, senderId=%d, recipientId=%d, amount=%f]", id, senderId, recipientId, amount);
+        return String.format("Transaction[id=%d, senderId=%d, recipientId=%d, amount=%f]", id, sender, recipient, amount);
     }
 
     public Long getId() {
         return id;
     }
 
-    public UserRecord getSenderId() { return senderId; }
+    public UserRecord getSender() { return sender; }
 
-    public UserRecord getRecipientId() {
-        return recipientId;
+    public UserRecord getRecipient() {
+        return recipient;
     }
 
     public float getAmount() {
