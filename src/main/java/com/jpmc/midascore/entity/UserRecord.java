@@ -1,9 +1,17 @@
 package com.jpmc.midascore.entity;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
 public class UserRecord {
+	
+	@OneToMany(mappedBy = "sender")
+	private List<TransactionRecord> sentTransactions;
+
+	@OneToMany(mappedBy = "recipient")
+	private List<TransactionRecord> receivedTransactions;
 
     @Id
     @GeneratedValue()
