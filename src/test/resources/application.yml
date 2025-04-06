@@ -1,0 +1,69 @@
+# Application Configuration
+general:
+  kafka-topic: forage-midas
+
+# Spring Boot Settings
+spring:
+  # Kafka Configuration
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: midas-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.jpmc.midascore.foundation.Transaction
+
+  # Database Configuration
+  datasource:
+    url: jdbc:h2:mem:midasdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+    hikari:
+      pool-name: MidasHikariPool
+      maximum-pool-size: 5
+
+  # JPA/Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+  # H2 Console
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: false
+
+  # Allow circular dependencies
+  main:
+    allow-circular-references: true
+
+# Server Configuration (MUST be 33400 as per task requirements)
+server:
+  port: 33400
+  servlet:
+    context-path: /
+  error:
+    include-message: always
+
+# Logging Configuration
+logging:
+  level:
+    org.springframework: INFO
+    com.jpmc.midascore: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
