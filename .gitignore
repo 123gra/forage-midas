@@ -1,0 +1,10 @@
+# IntelliJ IDEA files
+.idea/
+*.iml
+
+# Maven build output
+target/
+
+# Logs and temporary files
+*.log
+*.tmp
