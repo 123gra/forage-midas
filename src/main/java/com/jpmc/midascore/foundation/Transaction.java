@@ -45,4 +45,5 @@ public class Transaction {
     public String toString() {
         return "Transaction {senderId=" + senderId + ", recipientId=" + recipientId + ", amount=" + amount + "}";
     }
+
 }

@@ -14,7 +14,7 @@ public class BalanceQuerier {
     }
 
     public Balance query(Long userId) {
-        String url = "http://localhost:33400/balance?userId=" + userId;
+        String url = "http://localhost:8080/balance?userId=" + userId;
         return restTemplate.getForObject(url, Balance.class);
     }
 }

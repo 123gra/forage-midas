@@ -12,6 +12,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
+
 public class TaskFiveTests {
     static final Logger logger = LoggerFactory.getLogger(TaskFiveTests.class);
 
@@ -48,5 +49,7 @@ public class TaskFiveTests {
         }
         output.append("---end output ---");
         logger.info(output.toString());
+
+        Thread.sleep(100000);
     }
 }
