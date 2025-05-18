@@ -28,4 +28,5 @@ This will make sure that whenever the alias_name runs in the terminal, the idea.
 TASK 1 completed!!
 </b>
 
-With the completion of task 1, I learned how dependencies are injected in the pom.xml files of a java application using Maven.
+With the completion of task 1, I learned how dependencies are injected in the pom.xml files of a java application using Maven. Also how application.yml is used for calling general.kafka-topic for several function value call.
+
