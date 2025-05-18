@@ -7,7 +7,7 @@ Learned building intellij idea community edition from source, from official webs
 
 Firstly, download the tarball of the version installed and extract it in the /opt folder.
 
-rename the extracted file as intellij for ease.
+Rename the extracted file as intellij for ease.
 
 Then set an alias in .zshrc or/and .bashrc(whichever is in use) such as 
 alias --alias_name--="/opt/intellij/bin/idea"
@@ -16,7 +16,7 @@ example:
 
 alias idea="/opt/intellij/bin/idea"
 
-make sure to have no spaces between the executable path and the assignment operator.
+Make sure to have no spaces between the executable path and the assignment operator.
 
 This will make sure that whenever the alias_name runs in the terminal, the idea.exe program gets executed and the Intellij IDE opens up
 
