@@ -10,7 +10,9 @@ Firstly, download the tarball of the version installed and extract it in the /op
 Rename the extracted file as intellij for ease.
 
 Then set an alias in .zshrc or/and .bashrc(whichever is in use) such as 
-alias --alias_name--="/opt/intellij/bin/idea"
+alias 
+
+--alias_name--="/opt/intellij/bin/idea"
 
 example:
 
