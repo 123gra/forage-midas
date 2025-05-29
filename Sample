@@ -1,0 +1,105 @@
+  Midas Core System
+
+Midas Core is a Spring Boot-based financial transaction processing microservice. It receives transactions from Kafka, validates and stores them in a PostgreSQL database, and forwards relevant data to an external REST API for incentives.
+
+
+---
+
+🚀 Tech Stack
+
+Java 17
+
+Spring Boot
+
+Apache Kafka
+
+PostgreSQL
+
+Docker & Docker Compose
+
+
+
+---
+
+📦 Project Structure
+
+Kafka Integration: KafkaTransactionListener, KafkaConsumerConfig
+
+Database Layer: Transaction, TransactionRepository
+
+Service Layer: TransactionService
+
+API Client: RestTemplate bean
+
+Utils: SampleKafkaProducer for test data
+
+
+
+---
+
+⚙️ Setup Instructions
+
+1. Prerequisites
+
+Java 17+
+
+Maven or Gradle
+
+Docker & Docker Compose
+
+
+2. Clone the Repository
+
+git clone <repo-url>
+cd midas-core
+
+3. Start Kafka, Zookeeper, and PostgreSQL
+
+docker-compose up -d
+
+4. Configure Application
+
+Edit application.properties if needed:
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/midasdb
+spring.datasource.username=midas
+spring.datasource.password=midaspass
+
+5. Run the Application
+
+./mvnw spring-boot:run
+
+6. Send a Sample Kafka Message
+
+Run SampleKafkaProducer to simulate a transaction:
+
+mvn compile exec:java -Dexec.mainClass="com.midas.core.util.SampleKafkaProducer"
+
+
+---
+
+📡 REST API Integration
+
+The TransactionService sends processed transactions to a REST API endpoint:
+
+POST http://incentive-api/notify
+
+Make sure this API is available or mocked during local testing.
+
+
+---
+
+📝 License
+
+MIT or Internal Use Only (update as appropriate)
+
+
+---
+
+✨ Contributors
+
+You!
+
+
+Feel free to fork and contribute!
+
