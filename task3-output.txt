@@ -1,0 +1,7 @@
+---begin output---
+----------------------------------------------------------
+----------------------------------------------------------
+----------------------------------------------------------
+use your debugger to find out what waldorf's balance is after all transactions are processed
+kill this test once you find the answer
+---end output--- 
