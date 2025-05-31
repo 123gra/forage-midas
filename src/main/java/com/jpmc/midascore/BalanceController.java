@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.jpmc.midascore.repository.UserRepository;
 import com.jpmc.midascore.entity.UserRecord;
 import com.jpmc.midascore.foundation.Balance;
-import java.util.List;
-import java.util.ArrayList;
 
 @RestController
 public class BalanceController {
@@ -18,15 +16,9 @@ public class BalanceController {
 
     @GetMapping("/balance")
     public Balance getBalance(@RequestParam("userId") long userId) {
-        // load all users in insertion order and use userId as index
-        List<UserRecord> users = new ArrayList<>();
-        userRepository.findAll().forEach(users::add);
-        int idx = (int) userId;
-        // if userId index is out of range, return zero balance
-        float amount = 0f;
-        if (idx >= 0 && idx < users.size()) {
-            amount = users.get(idx).getBalance();
-        }
+        // fetch user by id and return balance or zero if not found
+        UserRecord user = userRepository.findById(userId);
+        float amount = (user != null ? user.getBalance() : 0f);
         return new Balance(amount);
     }
 } 
