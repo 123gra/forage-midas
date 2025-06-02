@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.List;
+import org.springframework.web.client.RestTemplate;
+
+import com.jpmc.midascore.foundation.Balance;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +23,26 @@ public class TransactionService {
 
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
+    private final RestTemplate restTemplate; 
+
+    
+    private static final String INCENTIVE_API = "http://localhost:8080/incentive";
 
     public TransactionService(UserRepository userRepository, TransactionRepository transactionRepository) {
         this.userRepository = userRepository;
         this.transactionRepository = transactionRepository;
+        this.restTemplate = new RestTemplate();
+    }
+
+    public float getIncentive(Transaction transaction) {
+
+        try {
+            Balance response = restTemplate.postForObject(INCENTIVE_API, transaction, Balance.class);
+            return response != null ? response.getAmount(): 0.0f; 
+        } catch (Exception e) {
+            logger.error("Failed to get incentive for transaction: {}", transaction, e);
+            return 0.0f;
+        }
     }
 
     @Transactional
@@ -30,27 +50,31 @@ public class TransactionService {
         Optional<UserRecord> senderOpt = userRepository.findById(transaction.getSenderId());
         Optional<UserRecord> recipientOpt = userRepository.findById(transaction.getRecipientId());
 
-        if (senderOpt.isEmpty() || recipientOpt.isEmpty()) {    
-            System.out.println("Invalid transaction: sender or recipient not found");
+        if (senderOpt.isEmpty() || recipientOpt.isEmpty()) {  
+            logger.error("Invalid transaction, either sender or recipient not found");
             return;
         }
 
         UserRecord sender = senderOpt.get();
         UserRecord recipient = recipientOpt.get();
 
+        float incentive = getIncentive(transaction); 
+
         // Validate transaction
         boolean isValid = validateTransaction(sender, recipient, transaction.getAmount());
 
         // Create transaction record
-        TransactionRecord record = new TransactionRecord(sender, recipient, transaction.getAmount());
+        TransactionRecord record = new TransactionRecord(sender, recipient, transaction.getAmount(), incentive);
 
         // If valid, update balances
         if (isValid) {
             transactionRepository.save(record);  // only make transaction record to the DB if valid transaction
             sender.setBalance(sender.getBalance() - transaction.getAmount());
-            recipient.setBalance(recipient.getBalance() + transaction.getAmount());
+            recipient.setBalance(recipient.getBalance() + transaction.getAmount() + incentive);
             userRepository.save(sender);
             userRepository.save(recipient);
+
+            logger.info("Processed transaction with incentive: {}", incentive);
         }
     }
 
@@ -58,9 +82,7 @@ public class TransactionService {
 
         if(sender.getBalance() < amount){
 
-            logger.info("Invalid transaction: Sender has insufficient funds for this transaction"); 
-
-            //System.out.println("Invalid transaction: Sender has insufficient funds for this transaction"); 
+            logger.error("Invalid transaction: Sender has insufficient funds for this transaction"); 
             return false;
         }
 

@@ -1,7 +1,6 @@
 package com.jpmc.midascore.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 public class TransactionRecord {
@@ -21,8 +20,8 @@ public class TransactionRecord {
     @Column(nullable = false)
     private float amount;
 
-    @Column(nullable = false)
-    private LocalDateTime timestamp;
+    @Column(nullable = true)
+    private float incentive; 
 
     /*
     @Column(nullable = false)
@@ -33,12 +32,12 @@ public class TransactionRecord {
     }
 
     // for now, we are only storing valid transactions so there is no need for a valid field
-    public TransactionRecord(UserRecord sender, UserRecord recipient, float amount) {
+    public TransactionRecord(UserRecord sender, UserRecord recipient, float amount, float incentive) {
         this.sender = sender;
         this.recipient = recipient;
         this.amount = amount;
+        this.incentive = incentive;
         //this.valid = valid;
-        this.timestamp = LocalDateTime.now();
     }
 
     // Getters and setters
@@ -58,8 +57,8 @@ public class TransactionRecord {
         return amount;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public float getIncentive() {
+        return incentive;
     }
 
     /*
