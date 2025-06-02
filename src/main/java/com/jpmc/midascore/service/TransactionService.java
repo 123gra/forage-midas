@@ -10,8 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class TransactionService {
+    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
+
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
 
@@ -25,7 +30,8 @@ public class TransactionService {
         Optional<UserRecord> senderOpt = userRepository.findById(transaction.getSenderId());
         Optional<UserRecord> recipientOpt = userRepository.findById(transaction.getRecipientId());
 
-        if (senderOpt.isEmpty() || recipientOpt.isEmpty()) {
+        if (senderOpt.isEmpty() || recipientOpt.isEmpty()) {    
+            System.out.println("Invalid transaction: sender or recipient not found");
             return;
         }
 
@@ -36,11 +42,11 @@ public class TransactionService {
         boolean isValid = validateTransaction(sender, recipient, transaction.getAmount());
 
         // Create transaction record
-        TransactionRecord record = new TransactionRecord(sender, recipient, transaction.getAmount(), isValid);
-        transactionRepository.save(record);
+        TransactionRecord record = new TransactionRecord(sender, recipient, transaction.getAmount());
 
         // If valid, update balances
         if (isValid) {
+            transactionRepository.save(record);  // only make transaction record to the DB if valid transaction
             sender.setBalance(sender.getBalance() - transaction.getAmount());
             recipient.setBalance(recipient.getBalance() + transaction.getAmount());
             userRepository.save(sender);
@@ -49,16 +55,20 @@ public class TransactionService {
     }
 
     private boolean validateTransaction(UserRecord sender, UserRecord recipient, float amount) {
-        // Check if sender and recipient exist
-        if (sender == null || recipient == null) {
+
+        if(sender.getBalance() < amount){
+
+            logger.info("Invalid transaction: Sender has insufficient funds for this transaction"); 
+
+            //System.out.println("Invalid transaction: Sender has insufficient funds for this transaction"); 
             return false;
         }
 
-        // Check if sender has sufficient balance
-        return sender.getBalance() >= amount;
+        return true;
     }
 
     public void printAllBalances() {
+
         Iterable<UserRecord> users = userRepository.findAll();
         System.out.println("\nCurrent Balances:");
         System.out.println("----------------");

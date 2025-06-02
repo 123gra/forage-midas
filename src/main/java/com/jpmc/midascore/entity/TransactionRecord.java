@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 public class TransactionRecord {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,17 +24,20 @@ public class TransactionRecord {
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
+    /*
     @Column(nullable = false)
     private boolean valid;
+    */
 
     protected TransactionRecord() {
     }
 
-    public TransactionRecord(UserRecord sender, UserRecord recipient, float amount, boolean valid) {
+    // for now, we are only storing valid transactions so there is no need for a valid field
+    public TransactionRecord(UserRecord sender, UserRecord recipient, float amount) {
         this.sender = sender;
         this.recipient = recipient;
         this.amount = amount;
-        this.valid = valid;
+        //this.valid = valid;
         this.timestamp = LocalDateTime.now();
     }
 
@@ -58,8 +62,10 @@ public class TransactionRecord {
         return timestamp;
     }
 
+    /*
     public boolean isValid() {
         return valid;
     }
+    */
 }
 
