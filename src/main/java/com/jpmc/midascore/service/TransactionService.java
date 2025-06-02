@@ -25,7 +25,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final RestTemplate restTemplate; 
 
-    
+
     private static final String INCENTIVE_API = "http://localhost:8080/incentive";
 
     public TransactionService(UserRepository userRepository, TransactionRepository transactionRepository) {
