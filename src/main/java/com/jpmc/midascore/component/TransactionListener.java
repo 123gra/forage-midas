@@ -1,6 +1,7 @@
 package com.jpmc.midascore.component;
 
 import com.jpmc.midascore.foundation.Transaction;
+import com.jpmc.midascore.service.TransactionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,13 +12,19 @@ import org.springframework.stereotype.Component;
 public class TransactionListener {
     private static final Logger logger = LoggerFactory.getLogger(TransactionListener.class);
 
+    private final TransactionService transactionService;
+
+    public TransactionListener(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
+
     @Value("${general.kafka-topic}")
     private String topic;
 
     @KafkaListener(topics = "${general.kafka-topic}", groupId = "midas-core-group")
     public void listen(Transaction transaction) {
         logger.info("Received transaction: {}", transaction);
-        
-        // For now, we just log the transaction. Processing will be implemented later.
-    }
+        transactionService.processTransaction(transaction);
+        transactionService.printAllBalances();
+    }   
 } 
