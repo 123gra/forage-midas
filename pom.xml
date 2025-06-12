@@ -24,6 +24,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-data-jpa</artifactId>
         <version>3.2.5</version>
+        <scope>test</scope>
     </dependency>
 
     <!-- Spring Web -->
@@ -31,6 +32,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
         <version>3.2.5</version>
+        <scope>test</scope>
     </dependency>
 
     <!-- Spring Kafka -->
@@ -38,6 +40,7 @@
         <groupId>org.springframework.kafka</groupId>
         <artifactId>spring-kafka</artifactId>
         <version>3.1.4</version>
+        <scope>test</scope>
     </dependency>
 
     <!-- H2 In-Memory Database -->
@@ -46,6 +49,7 @@
         <artifactId>h2</artifactId>
         <version>2.2.224</version>
         <scope>runtime</scope>
+        <!-- <scope>test</scope> -->
     </dependency>
 
     <!-- Spring Boot Test -->
@@ -61,7 +65,7 @@
         <groupId>org.springframework.kafka</groupId>
         <artifactId>spring-kafka-test</artifactId>
         <version>3.1.4</version>
-        <scope>test</scope>
+        <!-- <scope>test</scope> -->
     </dependency>
 
 <!-- Apache Commons IO for IOUtils -->
