@@ -16,9 +16,53 @@
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+	
 	<dependencies>
-	</dependencies>
-
+		         <! 1 Spring Data JPA >
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+        <version>3.2.5</version>
+    </dependencies>
+	                <! 2 spring web >
+	 <dependency>
+             <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+        <version>3.2.5</version>
+    </dependency>
+	                <! 3 spring kafka >
+    <dependency>
+        <groupId>org.springframework.kafka</groupId>
+        <artifactId>spring-kafka</artifactId>
+        <version>3.1.4</version>
+    </dependency>
+	               <! 4 H2 Database >
+    <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>2.2.224</version>
+    </dependency>
+	               <! 5 Spring Boot Test >
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>3.2.5</version>
+        <scope>test</scope>
+    </dependency>
+	              <! 6. Spring Kafka Test >
+    <dependency>
+        <groupId>org.springframework.kafka</groupId>
+        <artifactId>spring-kafka-test</artifactId>
+        <version>3.1.4</version>
+        <scope>test</scope> 
+                  <! 7 Kafka form >
+    <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>kafka</artifactId>
+        <version>1.19.1</version>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
 	<build>
 		<plugins>
 			<plugin>
