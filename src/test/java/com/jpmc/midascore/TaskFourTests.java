@@ -23,6 +23,9 @@ public class TaskFourTests {
     @Autowired
     private FileLoader fileLoader;
 
+    @Autowired
+    private com.jpmc.midascore.repository.UserRepository userRepository;
+
     @Test
     void task_four_verifier() throws InterruptedException {
         userPopulator.populate();
@@ -31,6 +34,9 @@ public class TaskFourTests {
             kafkaProducer.send(transactionLine);
         }
         Thread.sleep(2000);
+
+        float bal = userRepository.findByName("wilbur").getBalance();
+        System.out.println("wilbur final balance = " + bal);
 
 
         logger.info("----------------------------------------------------------");

@@ -14,6 +14,7 @@ public class UserRecord {
 
     @Column(nullable = false)
     private float balance;
+    private boolean empty;
 
     protected UserRecord() {
     }
@@ -42,5 +43,13 @@ public class UserRecord {
 
     public void setBalance(float balance) {
         this.balance = balance;
+    }
+
+
+    public boolean isEmpty() {
+        return this.empty;
+    }
+    public void setEmpty(boolean empty) {
+        this.empty = empty;
     }
 }
