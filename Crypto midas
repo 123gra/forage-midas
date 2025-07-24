@@ -1,0 +1,10 @@
+temperature=float(input ("enter temperature:"))
+humidity=float(input ("enter humidity:"))
+if temperature> 90
+print("alert: high temperature !")
+else:
+print(" temperature is normal.")
+if humidity> 60:
+print("alert:high humidity!")
+else:
+print("humidity is normal.")
