@@ -4,17 +4,19 @@ package database
 
 import (
 	"time"
+
+	"gopkg.in/inf.v0"
 )
 
 // TransactionMetric represents a transaction metric stored in Cassandra
 type TransactionMetric struct {
 	TransactionID string    `cql:"transaction_id"`
 	ProcessedAt   time.Time `cql:"processed_at"`
-	Amount        float64   `cql:"amount"`
+	Amount        *inf.Dec  `cql:"amount"`
 	Category      string    `cql:"category"`
 	Merchant      string    `cql:"merchant"`
 	IsFraud       bool      `cql:"is_fraud"`
-	RiskScore     float64   `cql:"risk_score"`
+	RiskScore     *inf.Dec  `cql:"risk_score"`
 	Location      string    `cql:"location"`
 }
 
