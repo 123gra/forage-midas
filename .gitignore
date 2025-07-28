@@ -33,3 +33,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+python-producer/data/credit_card_transactions.csv
