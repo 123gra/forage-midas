@@ -1,20 +1,23 @@
 package database
 
-// cassandra connection. 
+// cassandra connection.
 
 import (
 	"fmt"
 	"time"
 
-	"github.com/gocql/gocql"
-    "github.com/sirupsen/logrus"
-    "go-analytics/config"
+	"go-analytics/config"
+
+	"github.com/apache/cassandra-gocql-driver/v2"
+	"github.com/sirupsen/logrus"
 )
 
 type CassandraDB struct {
+	cluster *gocql.ClusterConfig 
 	session *gocql.Session
 	logger *logrus.Logger
 }
+
 
 
 
