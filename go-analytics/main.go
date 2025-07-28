@@ -92,25 +92,19 @@ func testSaveTransactionMetric(cfg *config.CassandraConfig) error {
 	fmt.Println("Transaction metric saved successfully!")
 
 	// Verify the data was saved by retrieving it
-	var retrievedMetric database.TransactionMetric
-	query := `SELECT transaction_id, processed_at, amount, category, merchant, is_fraud, risk_score, location 
-			  FROM midas_analytics.transaction_metrics WHERE transaction_id = ?`
+	startTime := time.Now().Add(-1 * time.Hour) // 1 hour ago
+	endTime := time.Now().Add(1 * time.Hour)    // 1 hour from now
 
-	if err := db.Session().Query(query, testMetric.TransactionID).Scan(
-		&retrievedMetric.TransactionID,
-		&retrievedMetric.ProcessedAt,
-		&retrievedMetric.Amount,
-		&retrievedMetric.Category,
-		&retrievedMetric.Merchant,
-		&retrievedMetric.IsFraud,
-		&retrievedMetric.RiskScore,
-		&retrievedMetric.Location,
-	); err != nil {
-		return fmt.Errorf("failed to retrieve transaction metric: %w", err)
+	metrics, err := repo.GetTransactionMetrics(startTime, endTime)
+	if err != nil {
+		return fmt.Errorf("failed to retrieve transaction metrics: %w", err)
 	}
 
-	fmt.Printf("Retrieved transaction: %s, Amount: $%s, Category: %s\n",
-		retrievedMetric.TransactionID, retrievedMetric.Amount.String(), retrievedMetric.Category)
+	fmt.Printf("Retrieved %d transaction metrics\n", len(metrics))
+	for _, metric := range metrics {
+		fmt.Printf("Transaction: %s, Amount: $%s, Category: %s\n",
+			metric.TransactionID, metric.Amount.String(), metric.Category)
+	}
 
 	return nil
 }
