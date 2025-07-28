@@ -1,6 +1,5 @@
 package main
 
-
 import (
 	"fmt"
 	"log"
@@ -32,7 +31,7 @@ func testCassandraConnection(cfg *config.CassandraConfig) error {
 	}
 
 	defer db.Close()
-	
+
 	// testing some query execution
 	var version string
 
@@ -42,5 +41,5 @@ func testCassandraConnection(cfg *config.CassandraConfig) error {
 
 	fmt.Printf("connected to cassandra version: %s\n", version)
 
-	return nil 
+	return nil
 }

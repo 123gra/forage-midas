@@ -44,13 +44,10 @@ func NewCassandraConnection(cfg config.CassandraConfig) (*CassandraDB, error) {
 		logger:  logrus.New(),
 	}
 
-	// Only initialize schema in development mode or when explicitly requested
-	// In production, schema should be managed separately
-	if cfg.InitializeSchema {
-		if err := db.initializeSchema(); err != nil {
-			session.Close()
-			return nil, fmt.Errorf("failed to init schema: %w", err)
-		}
+	// Automatically check if schema needs initialization
+	if err := db.checkAndInitializeSchema(); err != nil {
+		session.Close()
+		return nil, fmt.Errorf("failed to check/init schema: %w", err)
 	}
 
 	return db, nil
@@ -67,18 +64,46 @@ func (db *CassandraDB) Session() *gocql.Session {
 	return db.session
 }
 
+func (db *CassandraDB) checkAndInitializeSchema() error {
+	// Check if tables already exist
+	tablesExist, err := db.checkTablesExist()
+	if err != nil {
+		return fmt.Errorf("failed to check if tables exist: %w", err)
+	}
+
+	if !tablesExist {
+		db.logger.Info("Tables don't exist, initializing schema...")
+		return db.initializeSchema()
+	}
+
+	db.logger.Info("Tables already exist, skipping schema initialization")
+	return nil
+}
+
+func (db *CassandraDB) checkTablesExist() (bool, error) {
+	// Check if at least one of our tables exists
+	var count int
+	query := `SELECT COUNT(*) FROM system_schema.tables WHERE keyspace_name = 'midas_analytics' AND table_name = 'transaction_metrics';`
+
+	if err := db.session.Query(query).Scan(&count); err != nil {
+		return false, fmt.Errorf("failed to query system_schema.tables: %w", err)
+	}
+
+	return count > 0, nil
+}
+
 func (db *CassandraDB) initializeSchema() error {
 
 	createKeyspaceQuery := `
-        CREATE KEYSPACE IF NOT EXISTS analytics 
+        CREATE KEYSPACE IF NOT EXISTS midas_analytics 
         WITH replication = {
             'class': 'SimpleStrategy',
-            'replication_factor' : 3
+            'replication_factor' : 1
         }
     `
 
 	if err := db.session.Query(createKeyspaceQuery).Exec(); err != nil {
-		return fmt.Errorf("Failed to create keyspace: %w", err)
+		return fmt.Errorf("failed to create keyspace: %w", err)
 	}
 
 	tables := []string{
@@ -100,7 +125,7 @@ func (db *CassandraDB) initializeSchema() error {
 }
 
 const createTransactionMetricsTable = `
-    CREATE TABLE IF NOT EXISTS analytics.transaction_metrics (
+    CREATE TABLE IF NOT EXISTS midas_analytics.transaction_metrics (
         transaction_id text,
         processed_at timestamp,
         amount decimal,
@@ -114,7 +139,7 @@ const createTransactionMetricsTable = `
 `
 
 const createUserBehaviorTable = `
-    CREATE TABLE IF NOT EXISTS analytics.user_behavior (
+    CREATE TABLE IF NOT EXISTS midas_analytics.user_behavior (
         user_id text,
         date date,
         total_transactions counter,
@@ -125,7 +150,7 @@ const createUserBehaviorTable = `
 `
 
 const createTimeSeriesMetricsTable = `
-    CREATE TABLE IF NOT EXISTS analytics.time_series_metrics (
+    CREATE TABLE IF NOT EXISTS midas_analytics.time_series_metrics (
         metric_name text,
         time_bucket text,
         timestamp timestamp,
