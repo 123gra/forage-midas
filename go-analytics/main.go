@@ -12,9 +12,14 @@ func main() {
 
 	fmt.Println("Testing cassandra connection setup...")
 
-	cfg := config.NewCassandraConfig()
+	// Load configuration
+	// could load only cassandra, but want to test kafka running as well. 
+	cfg, err := config.Load()
+	if err != nil {
+		log.Fatalf("Failed to load config: %v", err)
+	}
 
-	if err := testCassandraConnection(cfg); err != nil {
+	if err := testCassandraConnection(&cfg.Cassandra); err != nil {
 
 		log.Fatalf("Connection test failed: %v", err)
 	}
