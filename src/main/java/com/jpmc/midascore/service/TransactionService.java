@@ -1,0 +1,102 @@
+package com.jpmc.midascore.service;
+
+import com.jpmc.midascore.entity.TransactionRecord;
+import com.jpmc.midascore.entity.UserRecord;
+import com.jpmc.midascore.foundation.Transaction;
+import com.jpmc.midascore.repository.TransactionRepository;
+import com.jpmc.midascore.repository.UserRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
+import java.util.List;
+import org.springframework.web.client.RestTemplate;
+
+import com.jpmc.midascore.foundation.Balance;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Service
+public class TransactionService {
+    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
+
+    private final UserRepository userRepository;
+    private final TransactionRepository transactionRepository;
+    private final RestTemplate restTemplate; 
+
+
+    private static final String INCENTIVE_API = "http://localhost:8080/incentive";
+
+    public TransactionService(UserRepository userRepository, TransactionRepository transactionRepository) {
+        this.userRepository = userRepository;
+        this.transactionRepository = transactionRepository;
+        this.restTemplate = new RestTemplate();
+    }
+
+    public float getIncentive(Transaction transaction) {
+
+        try {
+            Balance response = restTemplate.postForObject(INCENTIVE_API, transaction, Balance.class);
+            return response != null ? response.getAmount(): 0.0f; 
+        } catch (Exception e) {
+            logger.error("Failed to get incentive for transaction: {}", transaction, e);
+            return 0.0f;
+        }
+    }
+
+    @Transactional
+    public void processTransaction(Transaction transaction) {
+        Optional<UserRecord> senderOpt = userRepository.findById(transaction.getSenderId());
+        Optional<UserRecord> recipientOpt = userRepository.findById(transaction.getRecipientId());
+
+        if (senderOpt.isEmpty() || recipientOpt.isEmpty()) {  
+            logger.error("Invalid transaction, either sender or recipient not found");
+            return;
+        }
+
+        UserRecord sender = senderOpt.get();
+        UserRecord recipient = recipientOpt.get();
+
+        float incentive = getIncentive(transaction); 
+
+        // Validate transaction
+        boolean isValid = validateTransaction(sender, recipient, transaction.getAmount());
+
+        // Create transaction record
+        TransactionRecord record = new TransactionRecord(sender, recipient, transaction.getAmount(), incentive);
+
+        // If valid, update balances
+        if (isValid) {
+            transactionRepository.save(record);  // only make transaction record to the DB if valid transaction
+            sender.setBalance(sender.getBalance() - transaction.getAmount());
+            recipient.setBalance(recipient.getBalance() + transaction.getAmount() + incentive);
+            userRepository.save(sender);
+            userRepository.save(recipient);
+
+            logger.info("Processed transaction with incentive: {}", incentive);
+        }
+    }
+
+    private boolean validateTransaction(UserRecord sender, UserRecord recipient, float amount) {
+
+        if(sender.getBalance() < amount){
+
+            logger.error("Invalid transaction: Sender has insufficient funds for this transaction"); 
+            return false;
+        }
+
+        return true;
+    }
+
+    public void printAllBalances() {
+
+        Iterable<UserRecord> users = userRepository.findAll();
+        System.out.println("\nCurrent Balances:");
+        System.out.println("----------------");
+        for (UserRecord user : users) {
+            System.out.printf("%s: %.2f%n", user.getName(), user.getBalance());
+        }
+        System.out.println("----------------\n");
+    }
+} 

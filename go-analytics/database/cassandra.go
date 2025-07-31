@@ -1,0 +1,161 @@
+package database
+
+// cassandra connection.
+
+import (
+	"fmt"
+	"time"
+
+	"github.com/jpmc/forge/go-analytics/config"
+
+	gocql "github.com/apache/cassandra-gocql-driver/v2"
+	"github.com/sirupsen/logrus"
+)
+
+type CassandraDB struct {
+	session *gocql.Session
+	logger  *logrus.Logger
+}
+
+func NewCassandraConnection(cfg config.CassandraConfig) (*CassandraDB, error) {
+
+	cluster := gocql.NewCluster(cfg.Hosts...)
+	cluster.Keyspace = cfg.Keyspace
+	cluster.Consistency = gocql.Quorum
+	cluster.Timeout = 10 * time.Second
+	cluster.ConnectTimeout = 10 * time.Second
+
+	// check user and pass provided in the config file
+	if cfg.Username != "" && cfg.Password != "" {
+		cluster.Authenticator = gocql.PasswordAuthenticator{
+			Username: cfg.Username,
+			Password: cfg.Password,
+		}
+	}
+
+	session, err := cluster.CreateSession()
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to create cassandra connection: %w", err)
+	}
+
+	db := &CassandraDB{
+		session: session,
+		logger:  logrus.New(),
+	}
+
+	// Automatically check if schema needs initialization
+	if err := db.checkAndInitializeSchema(); err != nil {
+		session.Close()
+		return nil, fmt.Errorf("failed to check/init schema: %w", err)
+	}
+
+	return db, nil
+}
+
+func (db *CassandraDB) Close() {
+
+	if db.session != nil {
+		db.session.Close()
+	}
+}
+
+func (db *CassandraDB) Session() *gocql.Session {
+	return db.session
+}
+
+func (db *CassandraDB) checkAndInitializeSchema() error {
+	// Check if tables already exist
+	tablesExist, err := db.checkTablesExist()
+	if err != nil {
+		return fmt.Errorf("failed to check if tables exist: %w", err)
+	}
+
+	if !tablesExist {
+		db.logger.Info("Tables don't exist, initializing schema...")
+		return db.initializeSchema()
+	}
+
+	db.logger.Info("Tables already exist, skipping schema initialization")
+	return nil
+}
+
+func (db *CassandraDB) checkTablesExist() (bool, error) {
+	// Check if at least one of our tables exists
+	var count int
+	query := `SELECT COUNT(*) FROM system_schema.tables WHERE keyspace_name = 'midas_analytics' AND table_name = 'transaction_metrics';`
+
+	if err := db.session.Query(query).Scan(&count); err != nil {
+		return false, fmt.Errorf("failed to query system_schema.tables: %w", err)
+	}
+
+	return count > 0, nil
+}
+
+func (db *CassandraDB) initializeSchema() error {
+
+	createKeyspaceQuery := `
+        CREATE KEYSPACE IF NOT EXISTS midas_analytics 
+        WITH replication = {
+            'class': 'SimpleStrategy',
+            'replication_factor' : 1
+        }
+    `
+
+	if err := db.session.Query(createKeyspaceQuery).Exec(); err != nil {
+		return fmt.Errorf("failed to create keyspace: %w", err)
+	}
+
+	tables := []string{
+		createTransactionMetricsTable,
+		createUserBehaviorTable,
+		createTimeSeriesMetricsTable,
+	}
+
+	for _, table := range tables {
+
+		if err := db.session.Query(table).Exec(); err != nil {
+			return fmt.Errorf("failed to create table: %w", err)
+		}
+	}
+
+	db.logger.Info("Cassandra scheme initilized successfully")
+
+	return nil
+}
+
+const createTransactionMetricsTable = `
+    CREATE TABLE IF NOT EXISTS midas_analytics.transaction_metrics (
+        transaction_id text,
+        processed_at timestamp,
+        amount decimal,
+        category text,
+        merchant text,
+        is_fraud boolean,
+        risk_score decimal,
+        location text,
+        PRIMARY KEY (transaction_id, processed_at)
+    ) WITH CLUSTERING ORDER BY (processed_at DESC)
+`
+
+const createUserBehaviorTable = `
+    CREATE TABLE IF NOT EXISTS midas_analytics.user_behavior (
+        user_id text,
+        date date,
+        total_transactions counter,
+        total_amount counter,
+        fraud_count counter,
+        PRIMARY KEY (user_id, date)
+    )
+`
+
+const createTimeSeriesMetricsTable = `
+    CREATE TABLE IF NOT EXISTS midas_analytics.time_series_metrics (
+        metric_name text,
+        time_bucket text,
+        timestamp timestamp,
+        value decimal,
+        metadata map<text, text>,
+        PRIMARY KEY ((metric_name, time_bucket), timestamp)
+    ) WITH CLUSTERING ORDER BY (timestamp DESC)
+`
