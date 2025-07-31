@@ -181,3 +181,35 @@ func (r *Repository) GetUserBehavior(userID string, startDate, endDate string) (
 
 	return behaviors, nil
 }
+
+// SaveAlert saves a new alert
+func (r *Repository) SaveAlert(alert *Alert) error {
+    query := `
+        INSERT INTO analytics.alerts 
+        (alert_id, created_at, alert_type, severity, user_id, transaction_id, description, risk_score, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `
+    
+    return r.session.Query(query,
+        alert.AlertID,
+        alert.CreatedAt,
+        alert.AlertType,
+        alert.Severity,
+        alert.UserID,
+        alert.TransactionID,
+        alert.Description,
+        alert.RiskScore,
+        alert.Status,
+    ).Exec()
+}
+
+// UpdateAlertStatus updates the status of an alert
+func (r *Repository) UpdateAlertStatus(alertID, status, resolvedBy string) error {
+    query := `
+        UPDATE analytics.alerts 
+        SET status = ?, resolved_at = ?, resolved_by = ?
+        WHERE alert_id = ?
+    `
+    
+    return r.session.Query(query, status, time.Now(), resolvedBy, alertID).Exec()
+}
