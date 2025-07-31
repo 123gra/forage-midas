@@ -72,8 +72,57 @@ func (r *Repository) GetTransactionMetrics(startTime, endTime time.Time) ([]*Tra
 	}
 
 	if err := iter.Close(); err != nil {
-		return nil, fmt.Errorf("Error iterating over results: %w", err)
+		return nil, fmt.Errorf("error iterating over results: %w", err)
 	}
 
 	return metrics, nil
+}
+
+
+func (r *Repository) SaveTimeSeriesMetric(metric *TimeSeriesMetric) error {
+
+	query := `
+		INSERT INTO midas_analytics.time_series_metrics
+		(metric_name, time_bucket, timestamp, value, metadata)
+		values(?, ? , ?, ?, ?)
+		`
+
+	return r.session.Query(query, 
+		metric.MetricName, 
+		metric.TimeBucket,
+		metric.Timestamp,
+		metric.Value,
+		metric.Metadata,
+	).Exec()
+}
+
+func (r *Repository) GetTimeSeriesMetrics(metricName, timeBucket string, startTime, endTime time.Time) ([]*TimeSeriesMetric, error){
+
+	query :=`
+	SELECT metric_name, time_bucket, timestamp, value, metadata
+	FROM midas_analytics.time_series_metrics
+	where metric_name = ? and time_bucket = ? and timestamp >= ? and timestamp <= ?
+	`
+
+	iter := r.session.Query(query, metricName, timeBucket, startTime, endTime).Iter()
+	var metrics []*TimeSeriesMetric
+
+	for {
+
+		metric := &TimeSeriesMetric{}
+
+		if !iter.Scan(
+			&metric.MetricName,
+            &metric.TimeBucket,
+            &metric.Timestamp,
+            &metric.Value,
+            &metric.Metadata,
+		) {
+			break
+		}
+
+		metrics = append(metrics, metric)
+	}
+	
+	return metrics, nil;
 }
