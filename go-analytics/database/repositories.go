@@ -123,6 +123,61 @@ func (r *Repository) GetTimeSeriesMetrics(metricName, timeBucket string, startTi
 
 		metrics = append(metrics, metric)
 	}
-	
+
 	return metrics, nil;
+}
+
+func (r *Repository) UpdateUserBehavior(userID, date string, amount float64, isFraud bool) error {
+
+	query := `
+	UPDATE midas_analytics.user_behavior
+	set total_transactions = total_transactions + 1,
+		total_amount = total_amount + ?,
+		fraud_count = fraud_count + ?
+	where user_id = ? and date = ?
+	`
+	
+	fraudIncrement := 0 
+
+	if isFraud {
+		fraudIncrement++
+	}
+
+	return r.session.Query(query, int64(amount*100), fraudIncrement, userID, date).Exec()
+}
+
+func (r *Repository) GetUserBehavior(userID string, startDate, endDate string) ([]*UserBehavior, error){
+
+	query := `
+		SELECT user_id, date, total_transactions, total_amount, fraud_count
+		FROM midas_analytics.user_behavior 
+		where user_id = ? and date >= ? and date <= ?
+	`
+
+	iter := r.session.Query(query, userID, startDate, endDate).Iter()
+
+	var behaviors []*UserBehavior
+
+	for {
+
+		behavior := &UserBehavior{}
+
+		if !iter.Scan(
+			&behavior.UserID,
+            &behavior.Date,
+            &behavior.TotalTransactions,
+            &behavior.TotalAmount,
+            &behavior.FraudCount,
+		) {
+			break
+		}
+
+		behaviors = append(behaviors, behavior)
+	}
+
+	if err := iter.Close(); err != nil {
+		return nil, fmt.Errorf("error iterating results: %w", err)
+	}
+
+	return behaviors, nil
 }
