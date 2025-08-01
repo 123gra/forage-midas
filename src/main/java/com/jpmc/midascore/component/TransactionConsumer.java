@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class TransactionConsumer {
@@ -29,12 +30,18 @@ public class TransactionConsumer {
         try {
             final UserRecord receiver = validateAndGetReceiver(transaction);
             final UserRecord sender = validateAndGetSender(transaction);
-            TransactionRecord transactionRecord = new TransactionRecord(sender, receiver, transaction.getAmount());
-            transactionRecordRepository.save(transactionRecord);
-            System.out.println()
+            final TransactionRecord transactionRecord = new TransactionRecord(sender, receiver,
+                    transaction.getAmount);
+            updateDatabase(transactionRecord);
+            System.out.println();
         } catch (ValidationException e) {
             System.out.println("no modification to db because of error: " + e.getMessage());
         }
+    }
+
+    @Transactional
+    private void updateDatabase(final TransactionRecord transactionRecord) {
+        transactionRecordRepository.save(transactionRecord);
     }
 
     private UserRecord validateAndGetReceiver(final Transaction transaction) throws ValidationException {
