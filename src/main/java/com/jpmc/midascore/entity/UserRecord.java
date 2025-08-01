@@ -1,6 +1,12 @@
 package com.jpmc.midascore.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.jpmc.midascore.entity.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.jpmc.midascore.repository.TransactionRepository;
 
 @Entity
 public class UserRecord {
@@ -15,6 +21,15 @@ public class UserRecord {
     @Column(nullable = false)
     private float balance;
 
+    @OneToMany(mappedBy = "sender")
+    private List<Transaction> sentTransactions;
+
+    @OneToMany(mappedBy = "recipient")
+    private List<Transaction> receivedTransactions;
+
+    // @Autowired
+    // private TransactionRepository transactionRepository;
+
     protected UserRecord() {
     }
 
@@ -25,7 +40,7 @@ public class UserRecord {
 
     @Override
     public String toString() {
-        return String.format("User[id=%d, name='%s', balance='%f'", id, name, balance);
+        return String.format("User[id=%d, name='%s', balance='%f']", id, name, balance);
     }
 
     public Long getId() {

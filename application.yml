@@ -9,6 +9,12 @@ server:
   port: 33400
 
 spring:
+  datasource:
+    url: jdbc:h2:mem:midasdb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
   kafka:
     consumer:
       bootstrap-servers: ${spring.embedded.kafka.brokers:localhost:9092}
@@ -16,8 +22,9 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "*"
-        spring.json.type.mapping: "transaction:com.jpmc.midascore.foundation.Transaction"
+        spring.json.value.default.type: com.jpmc.midascore.entity.Transaction
+        spring.json.trusted.packages: "com.jpmc.midascore.entity,com.jpmc.midascore.foundation"
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
       auto-offset-reset: earliest
     producer:
       bootstrap-servers: ${spring.embedded.kafka.brokers:localhost:9092}
@@ -26,17 +33,20 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    show-sql: false
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 
   h2:
     console:
       enabled: true
+      path: /h2-console
 
 logging:
   level:
-    com.jpmc.midascore: INFO
-
-dependencies:
-  - org.springframework.boot:spring-boot-starter-data-jpa
-  - com.h2database:h2:runtime
+    org.springframework: INFO
+    com.jpmc.midascore: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type: TRACE
