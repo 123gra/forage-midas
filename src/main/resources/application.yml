@@ -1,0 +1,38 @@
+general:
+  kafka-topic: midas-transactions
+
+incentive:
+  api:
+    url: http://localhost:8080/incentive
+
+server:
+  port: 33400
+
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: ${spring.embedded.kafka.brokers:localhost:9092}
+      group-id: midas-consumer-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.type.mapping: "transaction:com.jpmc.midascore.entity.Transaction"
+      auto-offset-reset: earliest
+    producer:
+      bootstrap-servers: ${spring.embedded.kafka.brokers:localhost:9092}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    com.jpmc.midascore: INFO
