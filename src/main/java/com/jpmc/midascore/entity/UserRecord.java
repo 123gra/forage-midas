@@ -3,11 +3,6 @@ package com.jpmc.midascore.entity;
 import jakarta.persistence.*;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.jpmc.midascore.entity.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.jpmc.midascore.repository.TransactionRepository;
-
 @Entity
 public class UserRecord {
 
@@ -22,13 +17,10 @@ public class UserRecord {
     private float balance;
 
     @OneToMany(mappedBy = "sender")
-    private List<Transaction> sentTransactions;
+    private List<TransactionRecord> sentTransactions;
 
     @OneToMany(mappedBy = "recipient")
-    private List<Transaction> receivedTransactions;
-
-    // @Autowired
-    // private TransactionRepository transactionRepository;
+    private List<TransactionRecord> receivedTransactions;
 
     protected UserRecord() {
     }
