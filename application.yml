@@ -1,20 +1,42 @@
 general:
-  kafka-topic: test-topic
+  kafka-topic: midas-transactions
+
+incentive:
+  api:
+    url: http://localhost:8080/transaction
+
+server:
+  port: 33400
 
 spring:
   kafka:
-    bootstrap-servers: localhost:9092
     consumer:
-      group-id: test-group
-      auto-offset-reset: earliest
+      bootstrap-servers: ${spring.embedded.kafka.brokers:localhost:9092}
+      group-id: midas-consumer-group
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
-        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
-        spring.json.trusted.packages: "com.jpmc.midascore.foundation"
+        spring.json.trusted.packages: "*"
+        spring.json.type.mapping: "transaction:com.jpmc.midascore.foundation.Transaction"
+      auto-offset-reset: earliest
     producer:
+      bootstrap-servers: ${spring.embedded.kafka.brokers:localhost:9092}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-    admin:
-      auto-create-topics: true
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    com.jpmc.midascore: INFO
+
+dependencies:
+  - org.springframework.boot:spring-boot-starter-data-jpa
+  - com.h2database:h2:runtime
