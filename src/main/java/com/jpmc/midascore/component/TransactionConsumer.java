@@ -2,6 +2,7 @@ package com.jpmc.midascore.component;
 
 import com.jpmc.midascore.entity.TransactionRecord;
 import com.jpmc.midascore.entity.UserRecord;
+import com.jpmc.midascore.exception.DependencyException;
 import com.jpmc.midascore.exception.ValidationException;
 import com.jpmc.midascore.foundation.Transaction;
 import com.jpmc.midascore.repository.TransactionRecordRepository;
@@ -12,6 +13,7 @@ import java.util.Optional;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 @Component
 public class TransactionConsumer {
@@ -20,9 +22,14 @@ public class TransactionConsumer {
 
     private final TransactionRecordRepository transactionRecordRepository;
 
-    public TransactionConsumer(UserRepository userRepository, TransactionRecordRepository transactionRecordRepository) {
+    private final IncentiveService incentiveService;
+
+    public TransactionConsumer(UserRepository userRepository,
+        TransactionRecordRepository transactionRecordRepository,
+        IncentiveService incentiveService) {
         this.userRepository = userRepository;
         this.transactionRecordRepository = transactionRecordRepository;
+        this.incentiveService = incentiveService;
     }
 
     @KafkaListener(topics = "${general.kafka-topic}", groupId = "${spring.kafka.consumer.group-id}")
@@ -31,17 +38,30 @@ public class TransactionConsumer {
             final UserRecord receiver = validateAndGetReceiver(transaction);
             final UserRecord sender = validateAndGetSender(transaction);
             final TransactionRecord transactionRecord = new TransactionRecord(sender, receiver,
-                    transaction.getAmount);
-            updateDatabase(transactionRecord);
-            System.out.println();
-        } catch (ValidationException e) {
-            System.out.println("no modification to db because of error: " + e.getMessage());
+                    transaction.getAmount());
+            final float incentive = getIncentive(transaction);
+            receiver.setBalance(receiver.getBalance() + transaction.getAmount() + incentive);
+            sender.setBalance(sender.getBalance() - transaction.getAmount());
+            updateDatabaseInOneTransaction(transactionRecord, sender, receiver);
+            System.out.println(sender.getName() + " - balance: " + sender.getBalance());
+            System.out.println(receiver.getName() + " - balance: " + receiver.getBalance());
+        } catch (ValidationException ve) {
+            System.out.println("no modification to db because of error: " + ve.getMessage());
+        } catch (DependencyException de) {
+            System.out.println("no modification to db because of error: " + de.getMessage());
         }
     }
 
+    private float getIncentive(Transaction transaction) throws DependencyException {
+        return incentiveService.getIncentive(transaction);
+    }
+
     @Transactional
-    private void updateDatabase(final TransactionRecord transactionRecord) {
+    private void updateDatabaseInOneTransaction(final TransactionRecord transactionRecord,
+        final UserRecord sender, final UserRecord receiver) {
         transactionRecordRepository.save(transactionRecord);
+        userRepository.save(sender);
+        userRepository.save(receiver);
     }
 
     private UserRecord validateAndGetReceiver(final Transaction transaction) throws ValidationException {

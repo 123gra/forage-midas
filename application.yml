@@ -22,7 +22,6 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.value.default.type: com.jpmc.midascore.entity.Transaction
         spring.json.trusted.packages: "com.jpmc.midascore.entity,com.jpmc.midascore.foundation"
         spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
       auto-offset-reset: earliest
