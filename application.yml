@@ -1,2 +1,6 @@
 general:
-  kafka-topic: test-topic
+  kafka-topic: transactions
+
+kafka:
+  topic:
+    transaction: transactions
