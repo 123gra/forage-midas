@@ -1,4 +1,4 @@
-# Midas
+# MidasFinCore
 Project repo for the JPMC Advanced Software Engineering Forage program
 
 # Midas Core System
