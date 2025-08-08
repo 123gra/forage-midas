@@ -21,6 +21,16 @@ public class TransactionRecord {
 
     private LocalDateTime timeStamp = LocalDateTime.now();
 
+    public double getIncentive() {
+        return incentive;
+    }
+
+    public void setIncentive(double incentive) {
+        this.incentive = incentive;
+    }
+
+    private double incentive;
+
     public Long getId() {
         return id;
     }

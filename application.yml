@@ -1,6 +1,9 @@
 general:
   kafka-topic: transactions
 
+server:
+  port: 9090
+
 spring:
   datasource:
     url: jdbc:h2:mem:testdb
@@ -25,6 +28,8 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
+      group-id: incentive-consumers
+      auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:

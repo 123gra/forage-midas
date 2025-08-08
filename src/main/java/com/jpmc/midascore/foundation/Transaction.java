@@ -8,6 +8,17 @@ public class Transaction {
     private long recipientId;
     private float amount;
 
+    private double incentive;
+
+    public double getIncentive() {
+        return incentive;
+    }
+
+    public void setIncentive(double incentive) {
+        this.incentive = incentive;
+    }
+
+
     public Transaction() {
     }
 
