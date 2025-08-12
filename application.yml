@@ -2,7 +2,7 @@ general:
   kafka-topic: transactions
 
 server:
-  port: 9090
+  port: 33400
 
 spring:
   datasource:
