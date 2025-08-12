@@ -39,7 +39,7 @@ public class TaskThreeTests {
         logger.info("use your debugger to find out what waldorf's balance is after all transactions are processed");
         logger.info("kill this test once you find the answer");
         while (true) {
-            Thread.sleep(20000);
+                Thread.sleep(20000);
             logger.info("...");
         }
     }
