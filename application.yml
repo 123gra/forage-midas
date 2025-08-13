@@ -1,0 +1,42 @@
+server:
+  port: 33400
+
+
+spring:
+  kafka:
+      group-id: midas-core-group
+  consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+  producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  datasource:
+    url: jdbc:h2:file:./db/midasdb
+    driver-class-name: org.h2.Driver
+    username: admin
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /db-console
+      settings:
+        web-allow-others: false
+
+
+
+kafka:
+  topic:
+    transaction: transactions
+
+general:
+  kafka-topic: transactions

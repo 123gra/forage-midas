@@ -2,11 +2,14 @@ package com.jpmc.midascore;
 
 import com.jpmc.midascore.component.DatabaseConduit;
 import com.jpmc.midascore.entity.UserRecord;
+import com.jpmc.midascore.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserPopulator {
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private FileLoader fileLoader;
 
@@ -20,5 +23,9 @@ public class UserPopulator {
             UserRecord user = new UserRecord(userData[0], Float.parseFloat(userData[1]));
             databaseConduit.save(user);
         }
+    }
+
+    public UserRepository getUserRepository() {
+        return userRepository;
     }
 }

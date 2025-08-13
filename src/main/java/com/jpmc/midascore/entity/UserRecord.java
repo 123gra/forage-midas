@@ -1,6 +1,10 @@
 package com.jpmc.midascore.entity;
 
 import jakarta.persistence.*;
+import org.apache.catalina.LifecycleState;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 public class UserRecord {
@@ -14,6 +18,13 @@ public class UserRecord {
 
     @Column(nullable = false)
     private float balance;
+
+    @OneToMany(mappedBy = "Sender")
+    private List<TransactionRecord> senderTransactions;
+
+    @OneToMany(mappedBy = "Recipient")
+    private List<TransactionRecord> recipientTransactions ;
+
 
     protected UserRecord() {
     }
