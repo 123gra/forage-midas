@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.jpmc</groupId>
-	<artifactId>midas-core</artifactId>
+	<artifactId>forage-midas</artifactId>
 	<version>1.0.0</version>
 	<name>midas-core</name>
 	<description>Midas Core</description>
@@ -43,7 +43,7 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>2.2.224</version>
-			<scope>test</scope>
+			<scope>runtime</scope>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
@@ -77,7 +77,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-		</plugins>
+        </plugins>
 	</build>
 
 </project>
