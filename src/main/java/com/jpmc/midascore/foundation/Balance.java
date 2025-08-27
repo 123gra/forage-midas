@@ -17,12 +17,12 @@ public class Balance {
         this.amount = amount;
     }
 
-    public Balance(Long userId, long l) {
-        // you can initialize amount here if needed
-        this.amount = BigDecimal.ZERO;
+    public Balance(Long userId, BigDecimal balance) {
+        this.amount = balance != null ? balance : BigDecimal.ZERO;
     }
 
-    public Balance(Long id, BigDecimal balance) {
+    public Balance(Long userId, long balance) {
+        this.amount = BigDecimal.valueOf(balance);
     }
 
     public BigDecimal getAmount() {

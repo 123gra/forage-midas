@@ -23,9 +23,6 @@ public class Transaction {
         this.incentive = BigDecimal.ZERO;
     }
 
-    public Transaction(long senderId, long recipientId, float v) {
-    }
-
     public long getSenderId() {
         return senderId;
     }

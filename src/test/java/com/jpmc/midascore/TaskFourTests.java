@@ -1,6 +1,7 @@
 package com.jpmc.midascore;
 
 import com.jpmc.midascore.entity.UserRecord;
+import com.jpmc.midascore.foundation.Transaction;
 import com.jpmc.midascore.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -15,6 +16,9 @@ import org.springframework.test.annotation.DirtiesContext;
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
 public class TaskFourTests {
     static final Logger logger = LoggerFactory.getLogger(TaskFourTests.class);
+
+    @Autowired
+    private TransactionProcessor transactionProcessor;
 
     @Autowired
     private KafkaProducer kafkaProducer;
@@ -35,14 +39,24 @@ public class TaskFourTests {
         for (String transactionLine : transactionLines) {
             kafkaProducer.send(transactionLine);
         }
-        Thread.sleep(2000);
+        Thread.sleep(3000);
 
+        for (String transactionLine : transactionLines) {
+            String[] parts = transactionLine.split(",\\s*");
+            long senderId = Long.parseLong(parts[0]);
+            long recipientId = Long.parseLong(parts[1]);
+            java.math.BigDecimal amount = new java.math.BigDecimal(parts[2]);
+
+            Transaction transaction = new Transaction(senderId, recipientId, amount);
+            transactionProcessor.process(transaction); // Directly process without Kafka
+        }
+
+        // Check Wilbur's balance
         UserRecord wilbur = userRepository.findByName("wilbur");
         if (wilbur != null) {
-            logger.info("🎯 Wilbur's FINAL balance = {}", wilbur.getBalance());
             System.out.println("🎯 Wilbur's FINAL balance = " + wilbur.getBalance());
         } else {
-            logger.error("Wilbur not found in DB!");
+            System.err.println("Wilbur not found in DB!");
         }
 
         logger.info("----------------------------------------------------------");

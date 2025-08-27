@@ -1,5 +1,7 @@
 package com.jpmc.midascore;
 
+// Task 3
+
 import com.jpmc.midascore.entity.UserRecord;
 import jakarta.persistence.*;
 
@@ -24,14 +26,14 @@ public class TransactionRecord {
     @Column(nullable = false)
     private BigDecimal incentive;
 
-    protected TransactionRecord() {
+    public TransactionRecord() {
     }
 
     public TransactionRecord(UserRecord sender, UserRecord recipient, BigDecimal amount, BigDecimal incentive) {
         this.sender = sender;
         this.recipient = recipient;
-        this.amount = amount;
-        this.incentive = incentive;
+        this.amount = (amount != null ? amount : BigDecimal.ZERO);
+        this.incentive = (incentive != null ? incentive : BigDecimal.ZERO);
     }
 
     public Long getId() {
@@ -58,10 +60,10 @@ public class TransactionRecord {
     public String toString() {
         return "TransactionRecord{" +
                 "id=" + id +
-                ", sender=" + sender.getName() +
-                ", recipient=" + recipient.getName() +
-                ", amount=" + amount +
-                ", incentive=" + incentive +
+                ", sender=" + (sender != null ? sender.getName() : "null") +
+                ", recipient=" + (recipient != null ? recipient.getName() : "null") +
+                ", amount=" + (amount != null ? amount.toPlainString() : "null") +
+                ", incentive=" + (incentive != null ? incentive.toPlainString() : "null") +
                 '}';
     }
 }

@@ -5,14 +5,25 @@ package com.jpmc.midascore;
 import java.math.BigDecimal;
 
 public class Incentive {
+
     private BigDecimal amount;
 
+    // Default constructor required for JSON deserialization
+    public Incentive() {
+    }
+
+    // Constructor for manual creation
     public Incentive(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public BigDecimal amount() {
+    // Getter
+    public BigDecimal getAmount() {
         return amount;
     }
-}
 
+    // Setter
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+}
