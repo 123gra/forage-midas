@@ -1,29 +1,45 @@
 package com.jpmc.midascore;
 
-// Task 4
-
+// 📦 Importing BigDecimal for precise monetary representation
 import java.math.BigDecimal;
 
-public class Incentive {
-
+/**
+ * 🎁 Incentive class represents a monetary reward or bonus.
+ * Designed for flexible instantiation and JSON compatibility.
+ */
+public class Incentive
+{
+    // 💰 Amount of the incentive
     private BigDecimal amount;
 
-    // Default constructor required for JSON deserialization
-    public Incentive() {
+    /**
+     * 🛠️ Default constructor required for JSON deserialization.
+     * Initializes an empty Incentive object.
+     */
+    public Incentive()
+    {
+        // No initialization needed; amount can be set later
     }
 
-    // Constructor for manual creation
-    public Incentive(BigDecimal amount) {
+    /**
+     * 🎯 Constructor for manual creation of Incentive.
+     *
+     * @param amount the monetary value of the incentive
+     */
+    public Incentive(BigDecimal amount)
+    {
         this.amount = amount;
     }
 
-    // Getter
-    public BigDecimal getAmount() {
+    // 📥 Getter for amount
+    public BigDecimal getAmount()
+    {
         return amount;
     }
 
-    // Setter
-    public void setAmount(BigDecimal amount) {
+    // 🔧 Setter for amount
+    public void setAmount(BigDecimal amount)
+    {
         this.amount = amount;
     }
 }
