@@ -1,44 +1,54 @@
 package com.jpmc.midascore.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
-import java.time.LocalTime;
+
+import java.math.BigDecimal;
 
 @Entity
-
 public class TransactionRecord {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    private UserRecord user;
+    @JoinColumn(name = "sender_id",nullable = false)
+    private UserRecord sender;
+
 
     @ManyToOne
+    @JoinColumn(name = "recipient_id",nullable = false)
     private UserRecord recipient;
 
-    private float amount;
-
-    private LocalTime timestamp = LocalTime.now();
-
-    public Long getId() {
-        return id;
+    public BigDecimal getIncentive() {
+        return incentive;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIncentive(BigDecimal incentive) {
+        this.incentive = incentive;
     }
 
-    public UserRecord getUser() {
-        return user;
+    private BigDecimal incentive;
+
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setUser(UserRecord user) {
-        this.user = user;
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
+    private BigDecimal amount;
+
+    public TransactionRecord(){
+    }
+    public TransactionRecord(UserRecord sender,UserRecord recipient,BigDecimal amount){
+
+        this.sender = sender;
+        this.recipient = recipient;
+        this.amount = amount;
+    }
     public UserRecord getRecipient() {
         return recipient;
     }
@@ -47,19 +57,19 @@ public class TransactionRecord {
         this.recipient = recipient;
     }
 
-    public float getAmount() {
-        return amount;
+    public UserRecord getSender() {
+        return sender;
     }
 
-    public void setAmount(float amount) {
-        this.amount = amount;
+    public void setSender(UserRecord sender) {
+        this.sender = sender;
     }
 
-    public LocalTime getTimestamp() {
-        return timestamp;
+    public Long getId() {
+        return id;
     }
 
-    public void setTimestamp(LocalTime timestamp) {
-        this.timestamp = timestamp;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

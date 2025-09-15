@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Entity
 
 public class UserRecord {
@@ -16,12 +18,12 @@ public class UserRecord {
     private String name;
 
     @Column(nullable = false)
-    private float balance;
+    private BigDecimal balance;
 
     protected UserRecord() {
     }
 
-    public UserRecord(String name, float balance) {
+    public UserRecord( String name, BigDecimal balance) {
         this.name = name;
         this.balance = balance;
     }
@@ -47,11 +49,11 @@ public class UserRecord {
         this.name = name;
     }
 
-    public float getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(float balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 }
