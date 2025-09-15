@@ -7,7 +7,6 @@ public class Incentive {
     private BigDecimal amount;
 
     public Incentive() {
-
     }
 
     public Incentive(BigDecimal amount){

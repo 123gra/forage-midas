@@ -90,7 +90,4 @@ public class TransactionListener {
             return BigDecimal.ZERO;
         }
     }
-
-
-
 }
