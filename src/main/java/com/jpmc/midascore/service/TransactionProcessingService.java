@@ -17,11 +17,14 @@ public class TransactionProcessingService {
 
     private final UserRepository userRepository;
     private final TransactionRecordRepository transactionRecordRepository;
+    private final IncentivesApiService incentivesApiService;
 
     public TransactionProcessingService(UserRepository userRepository, 
-                                      TransactionRecordRepository transactionRecordRepository) {
+                                      TransactionRecordRepository transactionRecordRepository,
+                                      IncentivesApiService incentivesApiService) {
         this.userRepository = userRepository;
         this.transactionRecordRepository = transactionRecordRepository;
+        this.incentivesApiService = incentivesApiService;
     }
 
     @Transactional
@@ -50,20 +53,25 @@ public class TransactionProcessingService {
                 return false;
             }
 
+            // Calculate incentive by calling the incentives API
+            float incentive = incentivesApiService.calculateIncentive(transaction);
+            logger.info("Incentive calculated: {} for transaction {} -> {} ({})", 
+                       incentive, sender.getName(), recipient.getName(), transaction.getAmount());
+
             // Process the transaction
             sender.setBalance(sender.getBalance() - transaction.getAmount());
-            recipient.setBalance(recipient.getBalance() + transaction.getAmount());
+            recipient.setBalance(recipient.getBalance() + transaction.getAmount() + incentive);
 
             // Save updated user records
             userRepository.save(sender);
             userRepository.save(recipient);
 
-            // Record the transaction
-            TransactionRecord transactionRecord = new TransactionRecord(sender, recipient, transaction.getAmount());
+            // Record the transaction with incentive
+            TransactionRecord transactionRecord = new TransactionRecord(sender, recipient, transaction.getAmount(), incentive);
             transactionRecordRepository.save(transactionRecord);
 
-            logger.info("Transaction processed successfully: {} -> {} ({})", 
-                       sender.getName(), recipient.getName(), transaction.getAmount());
+            logger.info("Transaction processed successfully: {} -> {} ({}) + incentive ({})", 
+                       sender.getName(), recipient.getName(), transaction.getAmount(), incentive);
             logger.info("Updated balances - {}: {}, {}: {}", 
                        sender.getName(), sender.getBalance(), 
                        recipient.getName(), recipient.getBalance());
