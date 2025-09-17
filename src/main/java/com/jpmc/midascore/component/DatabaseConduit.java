@@ -16,4 +16,16 @@ public class DatabaseConduit {
         userRepository.save(userRecord);
     }
 
+    public UserRecord findById(long id) {
+        return userRepository.findById(id);
+    }
+
+    public UserRecord findByName(String name) {
+        return userRepository.findByName(name);
+    }
+
+    public Iterable<UserRecord> findAll() {
+        return userRepository.findAll();
+    }
+
 }
