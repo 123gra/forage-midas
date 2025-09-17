@@ -1,9 +1,9 @@
 package com.jpmc.midascore.repository;
 
-import com.jpmc.midascore.entity.UserRecord;
+import com.jpmc.midascore.entity.TransactionRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserRecord, Long> {
+public interface TransactionRecordRepository extends JpaRepository<TransactionRecord, Long> {
 }
