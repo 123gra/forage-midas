@@ -26,8 +26,10 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       group-id: test-group
       auto-offset-reset: earliest
+      enable-auto-commit: true
       properties:
         spring.json.trusted.packages: "com.jpmc.midascore.foundation"
+        spring.json.type.mapping: "transaction:com.jpmc.midascore.foundation.Transaction"
 
 # Application-specific configuration for tests
 general:

@@ -30,8 +30,10 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       group-id: midas-group
+      auto-offset-reset: earliest
       properties:
         spring.json.trusted.packages: "com.jpmc.midascore.foundation"
+        spring.json.type.mapping: "transaction:com.jpmc.midascore.foundation.Transaction"
 
 # Application-specific configuration
 general:
@@ -44,6 +46,7 @@ server:
 # Logging configuration
 logging:
   level:
-    com.jpmc.midascore: INFO
+    com.jpmc.midascore: DEBUG
+    com.jpmc.midascore.component.TransactionKafkaListener: INFO
     org.springframework.kafka: WARN
     org.apache.kafka: WARN
