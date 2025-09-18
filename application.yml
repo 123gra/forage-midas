@@ -33,3 +33,6 @@ spring:
 general:
   kafka-topic: transactions
   kafka-group: midas-core
+
+server:
+  port: 33400
