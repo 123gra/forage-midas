@@ -41,7 +41,7 @@ general:
 
 # Server configuration
 server:
-  port: 8080
+  port: 33400
 
 # Logging configuration
 logging:
