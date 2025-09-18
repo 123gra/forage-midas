@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: midas-core
+  
+  # H2 Database Configuration
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: 
+    
+  h2:
+    console:
+      enabled: true
+      
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    
+  # Kafka Configuration
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: midas-group
+      auto-offset-reset: earliest
+      properties:
+        spring.json.trusted.packages: "com.jpmc.midascore.foundation"
+        spring.json.type.mapping: "transaction:com.jpmc.midascore.foundation.Transaction"
+
+# Application-specific configuration
+general:
+  kafka-topic: transaction-topic
+
+# Server configuration
+server:
+  port: 33400
+
+# Logging configuration
+logging:
+  level:
+    com.jpmc.midascore: DEBUG
+    com.jpmc.midascore.component.TransactionKafkaListener: INFO
+    org.springframework.kafka: WARN
+    org.apache.kafka: WARN
