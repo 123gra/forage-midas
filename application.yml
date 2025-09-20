@@ -1,0 +1,17 @@
+general:
+  kafka-topic: "transactions"
+
+spring:
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: midas-group
+      auto-offset-reset: earliest # <-- The definitive fix
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.type.mapping: transaction:com.jpmc.midascore.dto.TransactionDTO
+        spring.json.trusted.packages: com.jpmc.midascore.dto
+        spring.json.value.default.type: com.jpmc.midascore.dto.TransactionDTO
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
