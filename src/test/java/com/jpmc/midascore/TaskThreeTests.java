@@ -1,5 +1,6 @@
 package com.jpmc.midascore;
 
+import com.jpmc.midascore.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ public class TaskThreeTests {
     private UserPopulator userPopulator;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private FileLoader fileLoader;
 
     @Test
@@ -32,6 +36,9 @@ public class TaskThreeTests {
         }
         Thread.sleep(2000);
 
+//        userRepository.findAll().forEach(
+//                user -> logger.info("User: {} balance: {}", user.getName(), user.getBalance())
+//        );
 
         logger.info("----------------------------------------------------------");
         logger.info("----------------------------------------------------------");
