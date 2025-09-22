@@ -5,14 +5,11 @@ import com.jpmc.midascore.entity.UserRecord;
 import com.jpmc.midascore.foundation.Incentive;
 import com.jpmc.midascore.foundation.Transaction;
 import com.jpmc.midascore.repository.TransactionRecordRepository;
-import com.jpmc.midascore.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 public class TransactionService {
@@ -20,7 +17,7 @@ public class TransactionService {
     private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private TransactionRecordRepository transactionRecordRepository;
@@ -33,22 +30,19 @@ public class TransactionService {
         logger.info("Processing transaction: {}", transaction);
 
         // Find sender and recipient by ID
-        Optional<UserRecord> senderOpt = userRepository.findById(transaction.getSenderId());
-        Optional<UserRecord> recipientOpt = userRepository.findById(transaction.getRecipientId());
+        UserRecord sender = userService.findUserById(transaction.getSenderId());
+        UserRecord recipient = userService.findUserById(transaction.getRecipientId());
 
         // Validate transaction
-        if (senderOpt.isEmpty()) {
+        if (sender == null) {
             logger.warn("Transaction rejected: Sender with ID {} not found", transaction.getSenderId());
             return false;
         }
 
-        if (recipientOpt.isEmpty()) {
+        if (recipient == null) {
             logger.warn("Transaction rejected: Recipient with ID {} not found", transaction.getRecipientId());
             return false;
         }
-
-        UserRecord sender = senderOpt.get();
-        UserRecord recipient = recipientOpt.get();
 
         if (sender.getBalance() < transaction.getAmount()) {
             logger.warn("Transaction rejected: Insufficient balance. Sender {} has {} but needs {}", 
@@ -71,8 +65,8 @@ public class TransactionService {
         recipient.setBalance(recipient.getBalance() + transaction.getAmount() + incentive.getAmount());
 
         // Save updated users
-        userRepository.save(sender);
-        userRepository.save(recipient);
+        userService.saveUser(sender);
+        userService.saveUser(recipient);
 
         // Create and save transaction record with incentive
         TransactionRecord transactionRecord = new TransactionRecord(sender, recipient, transaction.getAmount(), incentive.getAmount());
