@@ -21,13 +21,17 @@ public class TransactionRecord {
     @Column(nullable = false)
     private Float amount;
 
+    @Column(nullable = false)
+    private Float incentive;
+
     protected TransactionRecord() {
     }
 
-    public TransactionRecord(UserRecord sender, UserRecord recipient, Float amount) {
+    public TransactionRecord(UserRecord sender, UserRecord recipient, Float amount, Float incentive) {
         this.sender = sender;
         this.recipient = recipient;
         this.amount = amount;
+        this.incentive = incentive;
     }
 
     // Getters and setters
@@ -63,6 +67,14 @@ public class TransactionRecord {
         this.amount = amount;
     }
 
+    public Float getIncentive() {
+        return incentive;
+    }
+
+    public void setIncentive(Float incentive) {
+        this.incentive = incentive;
+    }
+
     @Override
     public String toString() {
         return "TransactionRecord{" +
@@ -70,6 +82,7 @@ public class TransactionRecord {
                 ", sender=" + (sender != null ? sender.getName() : "null") +
                 ", recipient=" + (recipient != null ? recipient.getName() : "null") +
                 ", amount=" + amount +
+                ", incentive=" + incentive +
                 '}';
     }
 }

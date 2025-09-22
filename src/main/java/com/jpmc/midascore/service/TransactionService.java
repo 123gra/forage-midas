@@ -2,6 +2,7 @@ package com.jpmc.midascore.service;
 
 import com.jpmc.midascore.entity.TransactionRecord;
 import com.jpmc.midascore.entity.UserRecord;
+import com.jpmc.midascore.foundation.Incentive;
 import com.jpmc.midascore.foundation.Transaction;
 import com.jpmc.midascore.repository.TransactionRecordRepository;
 import com.jpmc.midascore.repository.UserRepository;
@@ -23,6 +24,9 @@ public class TransactionService {
 
     @Autowired
     private TransactionRecordRepository transactionRecordRepository;
+
+    @Autowired
+    private IncentiveService incentiveService;
 
     @Transactional
     public boolean processTransaction(Transaction transaction) {
@@ -56,21 +60,28 @@ public class TransactionService {
         logger.info("Transaction valid. Processing: {} -> {} (${})", 
                    sender.getName(), recipient.getName(), transaction.getAmount());
 
+        // Get incentive from incentive API
+        Incentive incentive = incentiveService.getIncentive(transaction);
+        logger.info("Incentive received: {}", incentive.getAmount());
+
         // Update balances
+        // Sender pays the transaction amount
         sender.setBalance(sender.getBalance() - transaction.getAmount());
-        recipient.setBalance(recipient.getBalance() + transaction.getAmount());
+        // Recipient receives transaction amount + incentive
+        recipient.setBalance(recipient.getBalance() + transaction.getAmount() + incentive.getAmount());
 
         // Save updated users
         userRepository.save(sender);
         userRepository.save(recipient);
 
-        // Create and save transaction record
-        TransactionRecord transactionRecord = new TransactionRecord(sender, recipient, transaction.getAmount());
+        // Create and save transaction record with incentive
+        TransactionRecord transactionRecord = new TransactionRecord(sender, recipient, transaction.getAmount(), incentive.getAmount());
         transactionRecordRepository.save(transactionRecord);
 
-        logger.info("Transaction processed successfully. New balances - {}: {}, {}: {}", 
+        logger.info("Transaction processed successfully. New balances - {}: {}, {}: {} (incentive: {})", 
                    sender.getName(), sender.getBalance(), 
-                   recipient.getName(), recipient.getBalance());
+                   recipient.getName(), recipient.getBalance(),
+                   incentive.getAmount());
 
         return true;
     }
