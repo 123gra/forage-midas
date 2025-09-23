@@ -1,0 +1,32 @@
+general:
+  kafka-topic: dummy-topic   # keep same as KafkaProducer & KafkaListener
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:midasdb;DB_CLOSE_DELAY=-1
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: update       # creates/updates schema automatically
+    show-sql: true           # logs SQL statements in console
+    properties:
+      hibernate:
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true          # enables browser console
+      path: /h2-console      # open at http://localhost:8080/h2-console
+
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.jpmc.midascore.foundation
