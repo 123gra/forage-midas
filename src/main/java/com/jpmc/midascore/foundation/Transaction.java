@@ -1,6 +1,8 @@
 package com.jpmc.midascore.foundation;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Transaction {
@@ -8,38 +10,29 @@ public class Transaction {
     private long recipientId;
     private float amount;
 
+    // No-args constructor
     public Transaction() {
     }
 
-    public Transaction(long senderId, long recipientId, float amount) {
+    // All-args constructor with @JsonCreator for Jackson deserialization
+    @JsonCreator
+    public Transaction(@JsonProperty("senderId") long senderId,
+                       @JsonProperty("recipientId") long recipientId,
+                       @JsonProperty("amount") float amount) {
         this.senderId = senderId;
         this.recipientId = recipientId;
         this.amount = amount;
     }
 
-    public long getSenderId() {
-        return senderId;
-    }
+    // Getters and setters
+    public long getSenderId() { return senderId; }
+    public void setSenderId(long senderId) { this.senderId = senderId; }
 
-    public void setSenderId(long senderId) {
-        this.senderId = senderId;
-    }
+    public long getRecipientId() { return recipientId; }
+    public void setRecipientId(long recipientId) { this.recipientId = recipientId; }
 
-    public long getRecipientId() {
-        return recipientId;
-    }
-
-    public void setRecipientId(long recipientId) {
-        this.recipientId = recipientId;
-    }
-
-    public float getAmount() {
-        return amount;
-    }
-
-    public void setAmount(float amount) {
-        this.amount = amount;
-    }
+    public float getAmount() { return amount; }
+    public void setAmount(float amount) { this.amount = amount; }
 
     @Override
     public String toString() {
