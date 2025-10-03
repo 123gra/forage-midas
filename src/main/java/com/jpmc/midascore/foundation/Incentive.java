@@ -9,13 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Transaction {
-    private long senderId;
-    private long recipientId;
+public class Incentive {
     private float amount;
-
-    @Override
-    public String toString() {
-        return "Transaction {senderId=" + senderId + ", recipientId=" + recipientId + ", amount=" + amount + "}";
-    }
 }
