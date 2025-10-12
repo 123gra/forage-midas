@@ -16,12 +16,13 @@ public class BalanceController {
     
     @GetMapping("/balance")
     public Balance getBalance(@RequestParam Long userId) {
-        UserRecord user = userRepository.findById(userId);
+        java.util.Optional<UserRecord> userOptional = userRepository.findById(userId);
         
-        if (user == null) {
+        if (userOptional.isEmpty()) {
             return new Balance(0.0f);
         }
         
+        UserRecord user = userOptional.get();
         return new Balance(user.getBalance());
     }
 }

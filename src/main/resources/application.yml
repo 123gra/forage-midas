@@ -43,7 +43,7 @@ spring:
 
 # Server configuration
 server:
-  port: 8080
+  port: 33400
 
 # Custom application properties
 general:
