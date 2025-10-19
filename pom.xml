@@ -16,8 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 	</properties>
-	<dependencies>
-	</dependencies>
+	
 <!-- Add the following inside your project's <dependencies> section in pom.xml -->
 <dependencies>
   <dependency>
