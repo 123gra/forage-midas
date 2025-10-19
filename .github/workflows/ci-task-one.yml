@@ -1,0 +1,55 @@
+name: CI - Task One
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Maven cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository
+            ~/.m2/settings.xml
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Run tests (mvn test) and capture log
+        shell: bash
+        run: |
+          set -o pipefail
+          mvn -B -e -DskipTests=false test 2>&1 | tee build_and_test.log || true
+          # Save exit status so that failure does not abort the next steps which upload artifacts
+          echo "MVN_EXIT=$?" > mvn_exit_status.txt
+
+      - name: Upload build log artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-and-test-log
+          path: |
+            build_and_test.log
+            mvn_exit_status.txt
+
+      - name: Show last 200 lines of build log
+        if: always()
+        shell: bash
+        run: |
+          echo "---- Last 200 lines of build_and_test.log ----"
+          tail -n 200 build_and_test.log || true
