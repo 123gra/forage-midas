@@ -1,9 +1,12 @@
 package com.jpmc.midascore.entity;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class UserRecord {
+public class UserRecord implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue()
@@ -25,7 +28,7 @@ public class UserRecord {
 
     @Override
     public String toString() {
-        return String.format("User[id=%d, name='%s', balance='%f'", id, name, balance);
+        return String.format("User[id=%d, name='%s', balance='%f']", id, name, balance);
     }
 
     public Long getId() {
@@ -42,5 +45,9 @@ public class UserRecord {
 
     public void setBalance(float balance) {
         this.balance = balance;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
