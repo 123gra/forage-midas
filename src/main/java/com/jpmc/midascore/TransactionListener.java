@@ -95,5 +95,9 @@ public class TransactionListener {
         transactionRecordRepository.save(record);
 
         logger.info("Persisted transaction id={} amount={} incentive={} from {} to {}", record.getId(), amount, incentiveAmount, senderId, recipientId);
+
+        if ("wilbur".equalsIgnoreCase(recipient.getName())) {
+            logger.info("WILBUR_BALANCE_AFTER: {}", recipient.getBalance());
+        }
     }
 }
