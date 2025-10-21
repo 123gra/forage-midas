@@ -42,6 +42,20 @@ public class TransactionRecord {
     public float getAmount() {
         return amount;
     }
+
+    // incentive amount returned by incentives API (>= 0)
+    private float incentive;
+
+    public TransactionRecord(UserRecord sender, UserRecord recipient, float amount, float incentive) {
+        this.sender = sender;
+        this.recipient = recipient;
+        this.amount = amount;
+        this.incentive = incentive;
+    }
+
+    public float getIncentive() {
+        return incentive;
+    }
 }
 package com.jpmc.midascore.entity;
 
