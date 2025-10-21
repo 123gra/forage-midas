@@ -18,33 +18,12 @@ public class TransactionRecord {
     @Column(nullable = false)
     private float amount;
 
+    // incentive amount returned by incentives API (>= 0)
+    @Column(nullable = false)
+    private float incentive;
+
     protected TransactionRecord() {
     }
-
-    public TransactionRecord(UserRecord sender, UserRecord recipient, float amount) {
-        this.sender = sender;
-        this.recipient = recipient;
-        this.amount = amount;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public UserRecord getSender() {
-        return sender;
-    }
-
-    public UserRecord getRecipient() {
-        return recipient;
-    }
-
-    public float getAmount() {
-        return amount;
-    }
-
-    // incentive amount returned by incentives API (>= 0)
-    private float incentive;
 
     public TransactionRecord(UserRecord sender, UserRecord recipient, float amount, float incentive) {
         this.sender = sender;
@@ -53,39 +32,6 @@ public class TransactionRecord {
         this.incentive = incentive;
     }
 
-    public float getIncentive() {
-        return incentive;
-    }
-}
-package com.jpmc.midascore.entity;
-
-import jakarta.persistence.*;
-
-@Entity
-public class TransactionRecord {
-
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @ManyToOne(optional = false)
-    private UserRecord sender;
-
-    @ManyToOne(optional = false)
-    private UserRecord recipient;
-
-    @Column(nullable = false)
-    private float amount;
-
-    protected TransactionRecord() {
-    }
-
-    public TransactionRecord(UserRecord sender, UserRecord recipient, float amount) {
-        this.sender = sender;
-        this.recipient = recipient;
-        this.amount = amount;
-    }
-
     public Long getId() {
         return id;
     }
@@ -100,5 +46,9 @@ public class TransactionRecord {
 
     public float getAmount() {
         return amount;
+    }
+
+    public float getIncentive() {
+        return incentive;
     }
 }
