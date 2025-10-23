@@ -1,5 +1,8 @@
 package com.jpmc.midascore;
 
+import com.jpmc.midascore.component.BalanceQuerier;
+import com.jpmc.midascore.component.KafkaProducer;
+import com.jpmc.midascore.entity.UserRecord;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +25,9 @@ public class TaskFourTests {
 
     @Autowired
     private FileLoader fileLoader;
+    
+    @Autowired
+    private BalanceQuerier balanceQuerier;
 
     @Test
     void task_four_verifier() throws InterruptedException {
@@ -32,15 +38,17 @@ public class TaskFourTests {
         }
         Thread.sleep(2000);
 
-
-        logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("use your debugger to find out what wilbur's balance is after all transactions are processed");
-        logger.info("kill this test once you find the answer");
-        while (true) {
-            Thread.sleep(20000);
-            logger.info("...");
+        // Query Wilbur's balance
+        UserRecord wilbur = balanceQuerier.queryUserByName("wilbur");
+        if (wilbur != null) {
+            int wilburBalance = (int) Math.floor(wilbur.getBalance());
+            logger.info("----------------------------------------------------------");
+            logger.info("----------------------------------------------------------");
+            logger.info("----------------------------------------------------------");
+            logger.info("Wilbur's balance after all transactions: {}", wilburBalance);
+            logger.info("Answer: {}", wilburBalance);
+        } else {
+            logger.error("Could not find Wilbur user");
         }
     }
 }
