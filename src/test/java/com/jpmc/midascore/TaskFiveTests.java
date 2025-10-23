@@ -1,5 +1,6 @@
 package com.jpmc.midascore;
 
+import com.jpmc.midascore.component.KafkaProducer;
 import com.jpmc.midascore.foundation.Balance;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
