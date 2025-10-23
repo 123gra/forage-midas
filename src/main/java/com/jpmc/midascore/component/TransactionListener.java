@@ -2,6 +2,7 @@ package com.jpmc.midascore.component;
 
 import com.jpmc.midascore.entity.TransactionRecord;
 import com.jpmc.midascore.entity.UserRecord;
+import com.jpmc.midascore.foundation.Incentive;
 import com.jpmc.midascore.foundation.Transaction;
 import com.jpmc.midascore.repository.TransactionRepository;
 import com.jpmc.midascore.repository.UserRepository;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 @Component
 public class TransactionListener {
@@ -21,6 +23,9 @@ public class TransactionListener {
     
     @Autowired
     private TransactionRepository transactionRepository;
+    
+    @Autowired
+    private RestTemplate restTemplate;
 
     @KafkaListener(topics = "${general.kafka-topic}", groupId = "midas-core-group")
     @Transactional
@@ -67,19 +72,37 @@ public class TransactionListener {
         UserRecord sender = userRepository.findById(transaction.getSenderId());
         UserRecord recipient = userRepository.findById(transaction.getRecipientId());
         
+        // Call incentive API to get incentive amount
+        Incentive incentive = getIncentiveFromAPI(transaction);
+        float incentiveAmount = incentive.getAmount();
+        
         // Update balances
+        // Sender pays the transaction amount (no incentive deducted from sender)
         sender.setBalance(sender.getBalance() - transaction.getAmount());
-        recipient.setBalance(recipient.getBalance() + transaction.getAmount());
+        // Recipient gets transaction amount + incentive
+        recipient.setBalance(recipient.getBalance() + transaction.getAmount() + incentiveAmount);
         
         // Save updated user records
         userRepository.save(sender);
         userRepository.save(recipient);
         
-        // Create and save transaction record
-        TransactionRecord transactionRecord = new TransactionRecord(sender, recipient, transaction.getAmount());
+        // Create and save transaction record with incentive
+        TransactionRecord transactionRecord = new TransactionRecord(sender, recipient, transaction.getAmount(), incentiveAmount);
         transactionRepository.save(transactionRecord);
         
-        logger.info("Transaction recorded: {} -> {}: {}", 
-                   sender.getName(), recipient.getName(), transaction.getAmount());
+        logger.info("Transaction recorded: {} -> {}: {} (incentive: {})", 
+                   sender.getName(), recipient.getName(), transaction.getAmount(), incentiveAmount);
+    }
+    
+    private Incentive getIncentiveFromAPI(Transaction transaction) {
+        try {
+            String apiUrl = "http://localhost:8080/incentive";
+            Incentive incentive = restTemplate.postForObject(apiUrl, transaction, Incentive.class);
+            logger.info("Received incentive from API: {}", incentive);
+            return incentive;
+        } catch (Exception e) {
+            logger.warn("Failed to get incentive from API, using 0: {}", e.getMessage());
+            return new Incentive(0.0f);
+        }
     }
 }
