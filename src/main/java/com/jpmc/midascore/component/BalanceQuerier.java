@@ -23,8 +23,8 @@ public class BalanceQuerier {
     }
     
     public UserRecord queryUserById(Long userId) {
-        Optional<UserRecord> user = userRepository.findById(userId);
-        return user.orElse(null);
+        Optional<UserRecord> userOpt = userRepository.findById(userId);
+        return userOpt.orElse(null);
     }
     
     public UserRecord queryUserByName(String name) {
