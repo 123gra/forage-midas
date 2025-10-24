@@ -64,7 +64,7 @@ User/TransactionRecord - JPA entities
 
 Repository Interfaces - Data access layer
 
-⚙️ Configuration
+# ⚙️ Configuration
 Key configuration in application.yml:
 
 Kafka bootstrap servers and consumer groups
@@ -73,7 +73,7 @@ H2 database connection
 
 JPA settings for entity management
 
-🎯 Project Purpose
+# 🎯 Project Purpose
 Built as part of the JPMC Forage internship program to demonstrate:
 
 Microservices architecture
