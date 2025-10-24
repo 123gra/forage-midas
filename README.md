@@ -82,4 +82,4 @@ Message-driven systems
 
 Database integration
 
-Financial transaction processing
+Financial transaction processing.
