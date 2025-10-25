@@ -23,6 +23,9 @@ public class TaskFourTests {
     @Autowired
     private FileLoader fileLoader;
 
+    @Autowired  // ADD THIS LINE
+    private TransactionService transactionService;
+
     @Test
     void task_four_verifier() throws InterruptedException {
         userPopulator.populate();
@@ -32,15 +35,23 @@ public class TaskFourTests {
         }
         Thread.sleep(2000);
 
+        // ADD THESE LINES TO GET WILBUR'S BALANCE
+        var wilbur = transactionService.findUserByName("wilbur");
+        if (wilbur != null) {
+            double wilburBalance = wilbur.getBalance();
+            double roundedAnswer = Math.floor(wilburBalance);
 
-        logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("use your debugger to find out what wilbur's balance is after all transactions are processed");
-        logger.info("kill this test once you find the answer");
-        while (true) {
-            Thread.sleep(20000);
-            logger.info("...");
+            System.out.println("==========================================");
+            System.out.println("WILBUR'S BALANCE: " + wilburBalance);
+            System.out.println("ANSWER TO SUBMIT: " + roundedAnswer);
+            System.out.println("==========================================");
+
+            logger.info("Wilbur's balance: {}", wilburBalance);
+            logger.info("Rounded answer: {}", roundedAnswer);
+        } else {
+            System.out.println("Wilbur user not found!");
         }
     }
 }
+        // Remove the infinite loop - just let the test complete
+        // The answer will be printed above}
