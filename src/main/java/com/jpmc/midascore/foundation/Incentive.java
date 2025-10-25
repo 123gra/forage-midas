@@ -1,18 +1,14 @@
 package com.jpmc.midascore.foundation;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.math.BigDecimal;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Balance {
+public class Incentive {
     private BigDecimal amount;
 
-    public Balance() {
-        this.amount = BigDecimal.ZERO;
+    public Incentive() {
     }
 
-    public Balance(BigDecimal amount) {
+    public Incentive(BigDecimal amount) {
         this.amount = amount;
     }
 
@@ -26,6 +22,8 @@ public class Balance {
 
     @Override
     public String toString() {
-        return "Balance {amount=" + amount.toPlainString() + "}";
+        return "Incentive{" +
+               "amount=" + amount +
+               '}';
     }
 }
