@@ -11,14 +11,19 @@ public class UserRecord implements Serializable {
     @Id
     @GeneratedValue()
     private long id;
+    private long senderId;
+    private long recipientId;
+  
 
     @Column(nullable = false)
     private String name;
+    private float amount;
+    private double incentive;
 
     @Column(nullable = false)
     private float balance;
 
-    protected UserRecord() {
+    public UserRecord() {
     }
 
     public UserRecord(String name, float balance) {
@@ -50,4 +55,21 @@ public class UserRecord implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+   
+    public void setSenderId(long senderId) {
+    this.senderId = senderId;
+}
+
+public void setRecipientId(long recipientId) {
+    this.recipientId = recipientId;
+}
+
+public void setAmount(float amount) {
+    this.amount = amount;
+}
+
+public void setIncentive(double incentive) {
+    this.incentive = incentive;
+}
+
 }
