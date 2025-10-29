@@ -1,0 +1,14 @@
+spring:
+  kafka:
+    producer:
+      bootstrap-servers: ${spring.embedded.kafka.brokers}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      bootstrap-servers: ${spring.embedded.kafka.brokers}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: test-group
+
+general:
+  kafka-topic: test-topic
