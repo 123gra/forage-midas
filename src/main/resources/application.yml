@@ -1,0 +1,30 @@
+server:
+  port: 33400
+management:
+  server:
+    port: 33400
+general:
+  kafka-topic: transactions
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: midas-group
+      auto-offset-reset: earliest
+
+logging:
+  level:
+    com.jpmc.midascore.component: DEBUG
