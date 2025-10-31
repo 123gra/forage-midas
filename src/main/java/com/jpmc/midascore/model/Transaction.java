@@ -6,6 +6,7 @@ public class Transaction {
     private double amount;
     private String type;
     private String description;
+    private double incentive;
 
     public Transaction() {
     }
@@ -47,6 +48,14 @@ public class Transaction {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public double getIncentive() {
+        return incentive;
+    }
+
+    public void setIncentive(double incentive) {
+        this.incentive = incentive;
     }
 
     @Override
