@@ -1,6 +1,6 @@
 package com.jpmc.midascore;
 
-import com.jpmc.midascore.foundation.Transaction;
+import com.jpmc.midascore.model.Transaction;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -17,6 +17,11 @@ public class KafkaProducer {
 
     public void send(String transactionLine) {
         String[] transactionData = transactionLine.split(", ");
-        kafkaTemplate.send(topic, new Transaction(Long.parseLong(transactionData[0]), Long.parseLong(transactionData[1]), Float.parseFloat(transactionData[2])));
+        Transaction transaction = new Transaction();
+        transaction.setId(transactionData[0]);
+        transaction.setAmount(Double.parseDouble(transactionData[1]));
+        transaction.setType(transactionData[2]);
+        transaction.setDescription(transactionData.length > 3 ? transactionData[3] : "");
+        kafkaTemplate.send(topic, transaction);
     }
 }
