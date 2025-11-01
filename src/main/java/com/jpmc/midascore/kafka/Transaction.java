@@ -1,4 +1,4 @@
-package com.jpmc.midascore.foundation;
+package com.jpmc.midascore.kafka;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
