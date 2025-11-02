@@ -11,36 +11,31 @@ import org.springframework.test.annotation.DirtiesContext;
 @SpringBootTest
 @DirtiesContext
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
-public class TaskFourTests {
-    static final Logger logger = LoggerFactory.getLogger(TaskFourTests.class);
+class TaskTwoTests_KAFKA {
+    static final Logger logger = LoggerFactory.getLogger(TaskTwoTests_KAFKA.class);
 
     @Autowired
     private KafkaProducer kafkaProducer;
 
     @Autowired
-    private UserPopulator userPopulator;
-
-    @Autowired
     private FileLoader fileLoader;
 
     @Test
-    void task_four_verifier() throws InterruptedException {
-        userPopulator.populate();
-        String[] transactionLines = fileLoader.loadStrings("/test_data/alskdjfh.fhdjsk");
+    void task_two_verifier() throws InterruptedException {
+        String[] transactionLines = fileLoader.loadStrings("/test_data/poiuytrewq.uiop");
         for (String transactionLine : transactionLines) {
             kafkaProducer.send(transactionLine);
         }
         Thread.sleep(2000);
-
-
         logger.info("----------------------------------------------------------");
         logger.info("----------------------------------------------------------");
         logger.info("----------------------------------------------------------");
-        logger.info("use your debugger to find out what wilbur's balance is after all transactions are processed");
+        logger.info("use your debugger to watch for incoming transactions");
         logger.info("kill this test once you find the answer");
         while (true) {
             Thread.sleep(20000);
             logger.info("...");
         }
     }
+
 }

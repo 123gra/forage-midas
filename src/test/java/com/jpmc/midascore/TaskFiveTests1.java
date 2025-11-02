@@ -1,5 +1,6 @@
 package com.jpmc.midascore;
 
+import com.jpmc.midascore.foundation.Balance;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,11 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
-public class TaskFourTests {
-    static final Logger logger = LoggerFactory.getLogger(TaskFourTests.class);
+public class TaskFiveTests1 {
+    static final Logger logger = LoggerFactory.getLogger(TaskFiveTests1.class);
 
     @Autowired
     private KafkaProducer kafkaProducer;
@@ -23,24 +24,29 @@ public class TaskFourTests {
     @Autowired
     private FileLoader fileLoader;
 
+    @Autowired
+    private BalanceQuerier balanceQuerier;
+
+
     @Test
-    void task_four_verifier() throws InterruptedException {
+    void task_five_verifier() throws InterruptedException {
         userPopulator.populate();
-        String[] transactionLines = fileLoader.loadStrings("/test_data/alskdjfh.fhdjsk");
+        String[] transactionLines = fileLoader.loadStrings("/test_data/rueiwoqp.tyruei");
         for (String transactionLine : transactionLines) {
             kafkaProducer.send(transactionLine);
         }
         Thread.sleep(2000);
 
-
         logger.info("----------------------------------------------------------");
         logger.info("----------------------------------------------------------");
         logger.info("----------------------------------------------------------");
-        logger.info("use your debugger to find out what wilbur's balance is after all transactions are processed");
-        logger.info("kill this test once you find the answer");
-        while (true) {
-            Thread.sleep(20000);
-            logger.info("...");
+        logger.info("submit the following output to complete the task (include begin and end output denotations)");
+        StringBuilder output = new StringBuilder("\n").append("---begin output ---").append("\n");
+        for (int i = 0; i < 13; i++) {
+            Balance balance = balanceQuerier.query((long) i);
+            output.append(balance.toString()).append("\n");
         }
+        output.append("---end output ---");
+        logger.info(output.toString());
     }
 }

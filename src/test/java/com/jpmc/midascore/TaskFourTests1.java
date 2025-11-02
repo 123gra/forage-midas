@@ -11,8 +11,8 @@ import org.springframework.test.annotation.DirtiesContext;
 @SpringBootTest
 @DirtiesContext
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
-public class TaskFourTests {
-    static final Logger logger = LoggerFactory.getLogger(TaskFourTests.class);
+public class TaskFourTests1 {
+    static final Logger logger = LoggerFactory.getLogger(TaskFourTests1.class);
 
     @Autowired
     private KafkaProducer kafkaProducer;
