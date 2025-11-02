@@ -1,6 +1,7 @@
 package com.jpmc.midascore.kafka;
 
 import com.jpmc.midascore.foundation.Transaction;
+import com.jpmc.midascore.foundation.Incentive;
 import com.jpmc.midascore.entity.TransactionRecord;
 import com.jpmc.midascore.entity.UserRecord;
 import com.jpmc.midascore.repository.UserRepository;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClientException;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -20,12 +23,16 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TransactionListener {
 
     private static final Logger log = LoggerFactory.getLogger(TransactionListener.class);
+    private static final String INCENTIVE_API_URL = "http://localhost:8080/incentive";
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     // collect first 4 amounts for easy submission
     private final AtomicInteger counter = new AtomicInteger(0);
@@ -47,7 +54,7 @@ public class TransactionListener {
             }
         }
 
-        // Task 3: Validate and persist transaction
+        // Task 3/4: Validate and persist transaction with incentive
         validateAndPersistTransaction(tx);
     }
 
@@ -78,23 +85,40 @@ public class TransactionListener {
             return;
         }
 
-        // Transaction is valid - persist it
+        // Transaction is valid - get incentive from API
+        float incentiveAmount = 0f;
         try {
-            // Create and save the transaction record
+            Incentive incentive = restTemplate.postForObject(INCENTIVE_API_URL, tx, Incentive.class);
+            if (incentive != null) {
+                incentiveAmount = incentive.getAmount();
+                log.info("INCENTIVE RECEIVED: {}", incentiveAmount);
+            }
+        } catch (RestClientException e) {
+            log.warn("FAILED TO FETCH INCENTIVE: {}", e.getMessage());
+            incentiveAmount = 0f;
+        }
+
+        // Persist the transaction
+        try {
+            // Create and save the transaction record with incentive
             TransactionRecord txRecord = new TransactionRecord(sender, recipient, amount);
+            txRecord.setIncentive(incentiveAmount);
             transactionRepository.save(txRecord);
             log.info("TRANSACTION RECORD SAVED: {}", txRecord);
 
             // Update balances
+            // Sender balance: reduce by transaction amount only
             sender.setBalance(sender.getBalance() - amount);
-            recipient.setBalance(recipient.getBalance() + amount);
+            // Recipient balance: increase by transaction amount + incentive
+            recipient.setBalance(recipient.getBalance() + amount + incentiveAmount);
 
             // Save updated user records
             userRepository.save(sender);
             userRepository.save(recipient);
 
-            log.info("TRANSACTION PROCESSED: Sender {} balance: {}, Recipient {} balance: {}",
-                    sender.getName(), sender.getBalance(), recipient.getName(), recipient.getBalance());
+            log.info("TRANSACTION PROCESSED: Sender {} balance: {}, Recipient {} balance: {}, Incentive: {}",
+                    sender.getName(), sender.getBalance(), recipient.getName(), recipient.getBalance(),
+                    incentiveAmount);
         } catch (Exception e) {
             log.error("ERROR processing transaction: {}", e.getMessage(), e);
         }
