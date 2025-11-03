@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Project Analysis - Manpower & Technology Requirements</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>📊 Software Project Analysis System</h1>
+                <p class="subtitle">Evidence-Based Manpower & Technology Planning</p>
+            </div>
+            <nav>
+                <a href="/" class="active">Analysis</a>
+                <a href="/about">About</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="intro-section">
+                <div class="intro-card">
+                    <h2>🎯 Purpose</h2>
+                    <p>This decision-support system analyzes software project requirements and provides evidence-based recommendations for manpower distribution and technology stack selection using industry-standard estimation models.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <span class="icon">📈</span>
+                        <h3>COCOMO Model</h3>
+                        <p>Constructive Cost Model for effort estimation</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="icon">🔢</span>
+                        <h3>Function Point Analysis</h3>
+                        <p>FPA-based complexity assessment</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="icon">👥</span>
+                        <h3>Manpower Planning</h3>
+                        <p>Optimal team size and role distribution</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="icon">⚙️</span>
+                        <h3>Tech Stack Recommendation</h3>
+                        <p>Rule-based technology selection</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h2>Project Requirements Input</h2>
+                <form id="analysisForm">
+                    <div class="form-grid">
+                        <!-- Basic Information -->
+                        <div class="form-group full-width">
+                            <label for="projectName">Project Name *</label>
+                            <input type="text" id="projectName" name="projectName" required placeholder="Enter project name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="domain">Project Domain *</label>
+                            <select id="domain" name="domain" required>
+                                <option value="">Select domain</option>
+                                <option value="WEB_APPLICATION">Web Application</option>
+                                <option value="MOBILE_APPLICATION">Mobile Application</option>
+                                <option value="ENTERPRISE_SOFTWARE">Enterprise Software</option>
+                                <option value="EMBEDDED_SYSTEMS">Embedded Systems</option>
+                                <option value="DATA_ANALYTICS">Data Analytics</option>
+                                <option value="MACHINE_LEARNING">Machine Learning</option>
+                                <option value="CLOUD_NATIVE">Cloud Native</option>
+                                <option value="DESKTOP_APPLICATION">Desktop Application</option>
+                                <option value="IOT_SYSTEM">IoT System</option>
+                                <option value="BLOCKCHAIN">Blockchain</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectType">Project Type *</label>
+                            <select id="projectType" name="projectType" required>
+                                <option value="">Select type</option>
+                                <option value="ORGANIC">Organic (Simple, small teams)</option>
+                                <option value="SEMI_DETACHED">Semi-Detached (Medium complexity)</option>
+                                <option value="EMBEDDED">Embedded (Complex, tight constraints)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="estimatedKLOC">Estimated KLOC *</label>
+                            <input type="number" id="estimatedKLOC" name="estimatedKLOC" required min="1" step="0.1" placeholder="Thousands of Lines of Code">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="expectedUsers">Expected Users *</label>
+                            <input type="number" id="expectedUsers" name="expectedUsers" required min="1" placeholder="Number of expected users">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="durationMonths">Duration (Months) *</label>
+                            <input type="number" id="durationMonths" name="durationMonths" required min="1" placeholder="Project duration">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="complexityLevel">Complexity Level *</label>
+                            <select id="complexityLevel" name="complexityLevel" required>
+                                <option value="">Select complexity</option>
+                                <option value="1">1 - Very Low</option>
+                                <option value="2">2 - Low</option>
+                                <option value="3">3 - Average</option>
+                                <option value="4">4 - High</option>
+                                <option value="5">5 - Very High</option>
+                            </select>
+                        </div>
+
+                        <!-- Function Point Analysis Inputs -->
+                        <div class="form-section-header full-width">
+                            <h3>Function Point Analysis</h3>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="externalInputs">External Inputs</label>
+                            <input type="number" id="externalInputs" name="externalInputs" min="0" value="0" placeholder="Number of inputs">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="externalOutputs">External Outputs</label>
+                            <input type="number" id="externalOutputs" name="externalOutputs" min="0" value="0" placeholder="Number of outputs">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="externalInquiries">External Inquiries</label>
+                            <input type="number" id="externalInquiries" name="externalInquiries" min="0" value="0" placeholder="Number of inquiries">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="internalFiles">Internal Files</label>
+                            <input type="number" id="internalFiles" name="internalFiles" min="0" value="0" placeholder="Number of files">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="externalInterfaces">External Interfaces</label>
+                            <input type="number" id="externalInterfaces" name="externalInterfaces" min="0" value="0" placeholder="Number of interfaces">
+                        </div>
+
+                        <!-- Additional Requirements -->
+                        <div class="form-section-header full-width">
+                            <h3>Additional Requirements</h3>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label>
+                                <input type="checkbox" id="requiresHighSecurity" name="requiresHighSecurity">
+                                <span>Requires High Security</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label>
+                                <input type="checkbox" id="requiresHighPerformance" name="requiresHighPerformance">
+                                <span>Requires High Performance</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label>
+                                <input type="checkbox" id="requiresScalability" name="requiresScalability">
+                                <span>Requires Scalability</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <label>
+                                <input type="checkbox" id="requiresRealTime" name="requiresRealTime">
+                                <span>Requires Real-Time Processing</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Analyze Project</button>
+                        <button type="reset" class="btn-secondary">Reset Form</button>
+                    </div>
+                </form>
+            </section>
+
+            <div id="loadingIndicator" class="loading-indicator" style="display: none;">
+                <div class="spinner"></div>
+                <p>Analyzing project requirements...</p>
+            </div>
+
+            <section id="resultsSection" class="results-section" style="display: none;">
+                <h2>Analysis Results</h2>
+                
+                <div class="results-grid">
+                    <!-- Summary Card -->
+                    <div class="result-card summary-card">
+                        <h3>📋 Project Summary</h3>
+                        <div id="projectSummary"></div>
+                    </div>
+
+                    <!-- COCOMO Results -->
+                    <div class="result-card">
+                        <h3>📈 COCOMO Estimation</h3>
+                        <div id="cocomoResults"></div>
+                    </div>
+
+                    <!-- FPA Results -->
+                    <div class="result-card">
+                        <h3>🔢 Function Point Analysis</h3>
+                        <div id="fpaResults"></div>
+                    </div>
+
+                    <!-- Cost Estimation -->
+                    <div class="result-card">
+                        <h3>💰 Cost Estimation</h3>
+                        <div id="costResults"></div>
+                    </div>
+
+                    <!-- Manpower Distribution -->
+                    <div class="result-card full-width">
+                        <h3>👥 Manpower Distribution</h3>
+                        <div id="manpowerResults"></div>
+                    </div>
+
+                    <!-- Technology Recommendations -->
+                    <div class="result-card full-width">
+                        <h3>⚙️ Technology Stack Recommendations</h3>
+                        <div id="technologyResults"></div>
+                    </div>
+
+                    <!-- Risk Assessment -->
+                    <div class="result-card full-width">
+                        <h3>⚠️ Risk Assessment</h3>
+                        <div id="riskResults"></div>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="result-card full-width recommendations-card">
+                        <h3>💡 Recommendations</h3>
+                        <div id="recommendationsResults"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Software Project Analysis System | Powered by COCOMO & FPA Models</p>
+        </footer>
+    </div>
+
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>
