@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Software Project Analysis</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>📊 Software Project Analysis System</h1>
+                <p class="subtitle">Evidence-Based Manpower & Technology Planning</p>
+            </div>
+            <nav>
+                <a href="/">Analysis</a>
+                <a href="/about" class="active">About</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="about-section">
+                <div class="about-card">
+                    <h2>🎯 Introduction</h2>
+                    <p>Software development is not only about writing code—it requires careful planning of resources, both in terms of manpower and technology. Many projects fail due to poor estimation of required team members or by choosing an inappropriate technology stack.</p>
+                    <p>Overstaffing increases costs, while understaffing leads to delays and poor quality. Similarly, using outdated or mismatched technologies can make the software inefficient or obsolete.</p>
+                    <p>This project proposes a decision-support system that analyzes software project requirements (domain, scale, complexity, and expected users) and recommends the right manpower distribution and technology stack.</p>
+                </div>
+
+                <div class="about-card">
+                    <h2>❗ Problem Statement</h2>
+                    <p>Current software companies often rely on experience-based judgment for manpower and technology planning, which may result in inaccurate estimations. There is a need for an automated and systematic approach that evaluates project requirements and provides evidence-based recommendations for staffing and technology.</p>
+                </div>
+
+                <div class="about-card">
+                    <h2>🔬 Methodology</h2>
+                    <h3>COCOMO (Constructive Cost Model)</h3>
+                    <p>COCOMO is an algorithmic software cost estimation model that uses a regression formula with parameters derived from historical project data. The system implements:</p>
+                    <ul>
+                        <li><strong>Organic Mode:</strong> Simple projects with small teams in familiar environments</li>
+                        <li><strong>Semi-Detached Mode:</strong> Medium complexity projects with mixed experience levels</li>
+                        <li><strong>Embedded Mode:</strong> Complex projects with tight constraints and real-time requirements</li>
+                    </ul>
+                    <p>The model calculates effort (person-months), development time, and average staff size based on estimated lines of code and project characteristics.</p>
+
+                    <h3>Function Point Analysis (FPA)</h3>
+                    <p>FPA measures software size by quantifying the functionality provided to the user based on:</p>
+                    <ul>
+                        <li>External Inputs</li>
+                        <li>External Outputs</li>
+                        <li>External Inquiries</li>
+                        <li>Internal Logical Files</li>
+                        <li>External Interface Files</li>
+                    </ul>
+                    <p>The system calculates unadjusted function points, applies a value adjustment factor based on technical complexity, and derives effort estimates.</p>
+
+                    <h3>Technology Recommendation Engine</h3>
+                    <p>A rule-based system that considers:</p>
+                    <ul>
+                        <li>Project domain (Web, Mobile, Enterprise, etc.)</li>
+                        <li>Performance requirements</li>
+                        <li>Scalability needs</li>
+                        <li>Security requirements</li>
+                        <li>Team expertise and industry best practices</li>
+                    </ul>
+
+                    <h3>Manpower Analysis</h3>
+                    <p>The system distributes team members across roles based on:</p>
+                    <ul>
+                        <li>Project size and complexity</li>
+                        <li>Development methodology</li>
+                        <li>Phase-based effort distribution</li>
+                        <li>Industry standards for team composition</li>
+                    </ul>
+                </div>
+
+                <div class="about-card">
+                    <h2>✨ Features</h2>
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <span class="feature-icon">📊</span>
+                            <div>
+                                <h4>Dual Estimation Models</h4>
+                                <p>Combines COCOMO and FPA for more accurate predictions</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">👥</span>
+                            <div>
+                                <h4>Role-Based Distribution</h4>
+                                <p>Recommends optimal team composition across different roles</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">⚙️</span>
+                            <div>
+                                <h4>Technology Stack Selection</h4>
+                                <p>Evidence-based recommendations for frontend, backend, database, and DevOps tools</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">⚠️</span>
+                            <div>
+                                <h4>Risk Assessment</h4>
+                                <p>Identifies potential risks based on project characteristics</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">💰</span>
+                            <div>
+                                <h4>Cost Estimation</h4>
+                                <p>Provides budget estimates based on effort calculations</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">📈</span>
+                            <div>
+                                <h4>Phase-Based Planning</h4>
+                                <p>Distributes effort across requirements, design, development, testing, and deployment</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-card">
+                    <h2>🎓 Benefits</h2>
+                    <ul>
+                        <li><strong>Reduced Project Failures:</strong> Better planning leads to more successful project outcomes</li>
+                        <li><strong>Cost Optimization:</strong> Avoid overstaffing and understaffing issues</li>
+                        <li><strong>Technology Alignment:</strong> Choose the right tools for the job</li>
+                        <li><strong>Evidence-Based Decisions:</strong> Move from gut feeling to data-driven planning</li>
+                        <li><strong>Risk Mitigation:</strong> Identify and address potential issues early</li>
+                        <li><strong>Improved Communication:</strong> Clear metrics for stakeholder discussions</li>
+                    </ul>
+                </div>
+
+                <div class="about-card">
+                    <h2>🛠️ Technology Stack</h2>
+                    <div class="tech-stack">
+                        <div class="tech-item">
+                            <strong>Backend:</strong> Spring Boot 3.2.5 (Java 17)
+                        </div>
+                        <div class="tech-item">
+                            <strong>Frontend:</strong> HTML5, CSS3, JavaScript (Vanilla)
+                        </div>
+                        <div class="tech-item">
+                            <strong>Templating:</strong> Thymeleaf
+                        </div>
+                        <div class="tech-item">
+                            <strong>Build Tool:</strong> Maven
+                        </div>
+                        <div class="tech-item">
+                            <strong>Estimation Models:</strong> COCOMO, Function Point Analysis
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <h2>Ready to Analyze Your Project?</h2>
+                    <a href="/" class="btn-primary">Start Analysis</a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Software Project Analysis System | Powered by COCOMO & FPA Models</p>
+        </footer>
+    </div>
+</body>
+</html>

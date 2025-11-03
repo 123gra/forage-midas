@@ -1,0 +1,14 @@
+package com.jpmc.midascore.model;
+
+public enum ProjectDomain {
+    WEB_APPLICATION,
+    MOBILE_APPLICATION,
+    ENTERPRISE_SOFTWARE,
+    EMBEDDED_SYSTEMS,
+    DATA_ANALYTICS,
+    MACHINE_LEARNING,
+    CLOUD_NATIVE,
+    DESKTOP_APPLICATION,
+    IOT_SYSTEM,
+    BLOCKCHAIN
+}

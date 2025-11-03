@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: midas-core
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
+logging:
+  level:
+    com.jpmc.midascore: INFO
+    org.springframework.web: INFO
