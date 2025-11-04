@@ -1,0 +1,5 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    web-application-type: none
+    lazy-initialization: true
