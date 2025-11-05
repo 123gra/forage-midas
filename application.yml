@@ -1,0 +1,15 @@
+spring:
+  h2:
+    console:
+      # This turns on the web-based console
+      enabled: true
+      # This sets the URL where you can access it
+      path: /h2-console
+  
+  # These are the default settings Spring Boot uses, 
+  # but it's good to write them down so you know what they are.
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
