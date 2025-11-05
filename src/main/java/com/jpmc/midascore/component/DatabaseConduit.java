@@ -5,7 +5,8 @@ import com.jpmc.midascore.repository.UserRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DatabaseConduit {
+public class DatabaseConduit 
+{
     private final UserRepository userRepository;
 
     public DatabaseConduit(UserRepository userRepository) {
@@ -15,5 +16,4 @@ public class DatabaseConduit {
     public void save(UserRecord userRecord) {
         userRepository.save(userRecord);
     }
-
 }
