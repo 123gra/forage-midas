@@ -3,8 +3,8 @@ package com.jpmc.midascore.entity;
 import jakarta.persistence.*;
 
 @Entity
-public class UserRecord {
-
+public class UserRecord 
+{
     @Id
     @GeneratedValue()
     private long id;
@@ -25,7 +25,7 @@ public class UserRecord {
 
     @Override
     public String toString() {
-        return String.format("User[id=%d, name='%s', balance='%f'", id, name, balance);
+        return "User[id=%d, name='%s', balance='%f'".formatted(id, name, balance);
     }
 
     public Long getId() {
