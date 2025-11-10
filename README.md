@@ -60,6 +60,7 @@ Users can retrieve their current balances (including incentives) via REST API.
 
 System Architecture:
 Kafka Topic  →  Midas Core (Kafka Listener)
+
                ↓
         Transaction Validation
                ↓
