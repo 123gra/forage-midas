@@ -70,6 +70,39 @@ Kafka Topic  →  Midas Core (Kafka Listener)
       Updated Balances in Database
                ↓
      REST Endpoint: /balance → JSON Response
+     
+How to Run the Project:
+
+1. Clone the Repository:
+git clone https://github.com/nithyashreekh/forage-midas.git
+cd forage-midas
+
+2. Start the Incentive API
+Navigate to the services folder and run the provided JAR file:
+cd services
+java -jar transaction-incentive-api.jar
+This launches the Incentive API on port 8080.
+
+3. Run Midas Core
+In a new terminal, from the project root:
+cd ..
+./mvnw spring-boot:run
+This starts the Midas Core application on port 33400.
+
+4. Run Tests
+After both services are running, execute the project tests:
+./mvnw test -Dtest=TaskFiveTests
+
+5. Access the REST API
+You can query user balances via:
+GET http://localhost:33400/balance?userId={id}
+Example:
+curl "http://localhost:33400/balance?userId=5"
+
+Response:
+{
+  "amount": 486.40
+}
 
 Final Outcome:
 Built a fully functional backend simulation for processing and tracking financial transactions.
