@@ -72,7 +72,10 @@ Kafka Topic  →  Midas Core (Kafka Listener)
       Updated Balances in Database
                ↓
      REST Endpoint: /balance → JSON Response
-     
+
+     <img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/6f03724c-048b-4b4c-aaa2-cce38adc1f28" />
+
+
 How to Run the Project:
 
 1. Clone the Repository:
