@@ -75,6 +75,7 @@ Kafka Topic  →  Midas Core (Kafka Listener)
 
 <img width="1536" height="1024" alt="d168c155-b0f0-4f0b-a01c-c0038e771065" src="https://github.com/user-attachments/assets/b94cf522-1b00-410c-b5f2-612c8c0baa33" />
 
+
      
 How to Run the Project:
 
