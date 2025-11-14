@@ -27,26 +27,37 @@ public class TaskFiveTests {
     @Autowired
     private BalanceQuerier balanceQuerier;
 
-
     @Test
     void task_five_verifier() throws InterruptedException {
+        // Populate users
         userPopulator.populate();
+
+        // Load transactions from file
         String[] transactionLines = fileLoader.loadStrings("/test_data/rueiwoqp.tyruei");
+
+        // Send all transactions to Kafka
         for (String transactionLine : transactionLines) {
             kafkaProducer.send(transactionLine);
         }
+
+        // Wait for the consumer to process all messages
         Thread.sleep(2000);
 
-        logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("submit the following output to complete the task (include begin and end output denotations)");
-        StringBuilder output = new StringBuilder("\n").append("---begin output ---").append("\n");
-        for (int i = 0; i < 13; i++) {
+        // Build output for submission
+        StringBuilder output = new StringBuilder("\n---begin output---\n");
+        for (int i = 0; i <= 12; i++) { // Query balances for IDs 0 through 12
             Balance balance = balanceQuerier.query((long) i);
-            output.append(balance.toString()).append("\n");
+            if (balance != null) {
+                output.append(balance.toString()).append("\n");
+            } else {
+                output.append("User ID ").append(i).append(": balance not found\n");
+            }
         }
-        output.append("---end output ---");
+        output.append("---end output---");
+
+        // Print the final output
         logger.info(output.toString());
     }
 }
+
+

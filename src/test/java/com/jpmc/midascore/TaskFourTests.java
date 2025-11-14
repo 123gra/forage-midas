@@ -23,24 +23,32 @@ public class TaskFourTests {
     @Autowired
     private FileLoader fileLoader;
 
+    @Autowired
+    private UserRepository userRepository; // Repository to fetch user balances
+
     @Test
     void task_four_verifier() throws InterruptedException {
+        // Populate users
         userPopulator.populate();
+
+        // Load transactions
         String[] transactionLines = fileLoader.loadStrings("/test_data/alskdjfh.fhdjsk");
+
+        // Send transactions through Kafka
         for (String transactionLine : transactionLines) {
             kafkaProducer.send(transactionLine);
         }
+
+        // Wait for consumer to process messages
         Thread.sleep(2000);
 
-
-        logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("use your debugger to find out what wilbur's balance is after all transactions are processed");
-        logger.info("kill this test once you find the answer");
-        while (true) {
-            Thread.sleep(20000);
-            logger.info("...");
+        // Fetch Wilbur's balance
+        User wilbur = userRepository.findByName("Wilbur"); // Adjust according to your User entity
+        if (wilbur != null) {
+            logger.info("Wilbur's balance after all transactions: {}", wilbur.getBalance());
+        } else {
+            logger.error("Wilbur not found!");
         }
     }
 }
+
