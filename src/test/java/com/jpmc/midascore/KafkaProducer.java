@@ -16,7 +16,26 @@ public class KafkaProducer {
     }
 
     public void send(String transactionLine) {
-        String[] transactionData = transactionLine.split(", ");
-        kafkaTemplate.send(topic, new Transaction(Long.parseLong(transactionData[0]), Long.parseLong(transactionData[1]), Float.parseFloat(transactionData[2])));
+        try {
+            String[] transactionData = transactionLine.split(",");
+
+            if (transactionData.length != 3) {
+                System.err.println("Invalid transaction line: " + transactionLine);
+                return;
+            }
+
+            long id = Long.parseLong(transactionData[0].trim());
+            long userId = Long.parseLong(transactionData[1].trim());
+            float amount = Float.parseFloat(transactionData[2].trim());
+
+            Transaction tx = new Transaction(id, userId, amount);
+            kafkaTemplate.send(topic, tx);
+
+            System.out.println("Sent transaction → " + tx);
+
+        } catch (Exception e) {
+            System.err.println("Error parsing transaction line: " + transactionLine);
+            e.printStackTrace();
+        }
     }
 }
