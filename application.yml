@@ -1,17 +1,4 @@
-# H2 Database Configuration
 spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
-
-  # H2 Console Configuration
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-
   # JPA and Hibernate Configuration
   jpa:
     hibernate:
@@ -19,7 +6,28 @@ spring:
     generate-ddl: true
     database-platform: org.hibernate.dialect.H2Dialect
 
+  # H2 Console Configuration
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
 
-# Kafka
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      group-id: midas
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+server:
+  port: 8080
+
 general:
-  kafka-topic: test-topic
+  kafka-topic: "transaction"
+  incentive-api-url: "http://localhost:8080/incentive"
