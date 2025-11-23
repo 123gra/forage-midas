@@ -12,6 +12,10 @@ spring:
       enabled: true
       path: /h2-console
 
+# <opt>
+  datasource:
+    url: jdbc:h2:mem:forage-midas
+
   kafka:
     consumer:
       auto-offset-reset: earliest
