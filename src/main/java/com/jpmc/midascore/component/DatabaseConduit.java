@@ -24,6 +24,7 @@ public class DatabaseConduit {
         UserRecord sender = getUser(transaction.getSenderId());
         UserRecord recipient = getUser(transaction.getRecipientId());
         float amount = transaction.getAmount();
+        float incentive = transaction.getIncentive();
 
         // update and save - User Balances
         sender.setBalance(sender.getBalance() - amount);
@@ -32,9 +33,8 @@ public class DatabaseConduit {
         save(recipient);
 
         //create and save - Transaction Record
-        TransactionRecord transactionRecord = new TransactionRecord(sender, recipient, amount);
+        TransactionRecord transactionRecord = new TransactionRecord(sender, recipient, amount, incentive);
         transactionRecordRepository.save(transactionRecord);
-
     }
 
     public boolean isValidTransaction(Transaction transaction) {

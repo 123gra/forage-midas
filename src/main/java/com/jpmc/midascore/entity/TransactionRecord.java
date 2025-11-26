@@ -9,10 +9,11 @@ import lombok.*;
 @ToString
 public class TransactionRecord {
 
-    public TransactionRecord (UserRecord sender, UserRecord recipient, float amount){
+    public TransactionRecord (UserRecord sender, UserRecord recipient, float amount, float incentive){
         this.sender = sender;
         this.recipient = recipient;
         this.amount = amount;
+        this.incentive = incentive;
     }
 
     @Id
@@ -22,11 +23,13 @@ public class TransactionRecord {
     @ManyToOne
     private UserRecord sender;
 
-
     @ManyToOne
     private UserRecord recipient;
 
     @Column(nullable = false)
     private float amount;
+
+    @Column(nullable = false)
+    private float incentive;
 
 }
