@@ -30,8 +30,8 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 server:
-  port: 8080
+  port: 33400 #Given in Task 5
 
 general:
   kafka-topic: "transaction"
-  incentive-api-url: "http://localhost:8080/incentive"
+  incentive-api-url: "http://localhost:8080/incentive" #Given in Task 4

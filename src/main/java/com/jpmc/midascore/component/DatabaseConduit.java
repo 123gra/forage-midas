@@ -52,4 +52,9 @@ public class DatabaseConduit {
         return userRepository.findById(id).orElse(null);
     }
 
+    public float queryUserBalance(Long userId) {
+        return userRepository.findById(userId)
+                .map(UserRecord::getBalance)
+                .orElse(0f);
+    }
 }
