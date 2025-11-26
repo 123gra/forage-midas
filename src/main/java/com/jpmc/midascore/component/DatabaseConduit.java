@@ -31,8 +31,6 @@ public class DatabaseConduit {
         save(sender);
         save(recipient);
 
-        if (sender.getName() == )
-
         //create and save - Transaction Record
         TransactionRecord transactionRecord = new TransactionRecord(sender, recipient, amount);
         transactionRecordRepository.save(transactionRecord);
