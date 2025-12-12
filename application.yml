@@ -13,3 +13,6 @@ spring:
       properties:
         spring.json.value.default.type: com.jpmc.midascore.model.Transaction
       group-id: midas-core
+
+server:
+  port: 33400

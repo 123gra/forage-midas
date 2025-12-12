@@ -8,6 +8,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Component
 public class TransactionConsumer {
     private static final Logger logger = LoggerFactory.getLogger(TransactionConsumer.class);
@@ -32,10 +34,12 @@ public class TransactionConsumer {
             long toId = Long.parseLong(parts[1].trim());
             double amount = Double.parseDouble(parts[2].trim());
 
-            UserRecord fromUser = userRepository.findById(fromId);
-            UserRecord toUser = userRepository.findById(toId);
+            Optional<UserRecord> fromUserOpt = userRepository.findById(fromId);
+            Optional<UserRecord> toUserOpt = userRepository.findById(toId);
 
-            if (fromUser != null && toUser != null) {
+            if (fromUserOpt.isPresent() && toUserOpt.isPresent()) {
+                UserRecord fromUser = fromUserOpt.get();
+                UserRecord toUser = toUserOpt.get();
                 fromUser.setBalance((float) (fromUser.getBalance() - amount));
                 toUser.setBalance((float) (toUser.getBalance() + amount));
                 userRepository.save(fromUser);
