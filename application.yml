@@ -1,0 +1,3 @@
+kafka-topic: trader-updates
+server:
+  port: 8082
