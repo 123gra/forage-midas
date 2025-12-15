@@ -1,0 +1,37 @@
+spring:
+  # JPA and Hibernate Configuration
+  jpa:
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  # H2 Console Configuration
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# <opt>
+  datasource:
+    url: jdbc:h2:mem:forage-midas
+
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      group-id: midas
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+server:
+  port: 33400 #Given in Task 5
+
+general:
+  kafka-topic: "transaction"
+  incentive-api-url: "http://localhost:8080/incentive" #Given in Task 4
