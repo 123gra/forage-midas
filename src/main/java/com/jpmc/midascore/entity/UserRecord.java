@@ -1,8 +1,13 @@
 package com.jpmc.midascore.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class UserRecord {
 
     @Id
@@ -28,17 +33,6 @@ public class UserRecord {
         return String.format("User[id=%d, name='%s', balance='%f'", id, name, balance);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public float getBalance() {
-        return balance;
-    }
 
     public void setBalance(float balance) {
         this.balance = balance;
