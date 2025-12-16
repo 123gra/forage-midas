@@ -6,15 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+//Sometimes the incoming JSON contains more fields than your Java class.
+//Without this annotation, Jackson will throw an exception.
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Balance {
-    private float amount;
-
-    @Override
-    public String toString() {
-        return "Balance {amount=" + amount + "}";
-    }
+@ToString
+public class Incentive {
+    public float amount;
 }
