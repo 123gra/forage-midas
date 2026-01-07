@@ -1,8 +1,10 @@
 package com.jpmc.midascore.foundation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Embeddable;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Embeddable
 public class Balance {
     private float amount;
 
