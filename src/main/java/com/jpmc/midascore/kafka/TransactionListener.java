@@ -35,17 +35,14 @@ public class TransactionListener {
         var sender = databaseConduit.findUser(transaction.getSenderId());
         var recipient = databaseConduit.findUser(transaction.getRecipientId());
 
-        // Validate users
         if (sender == null || recipient == null) {
             return;
         }
 
-        // Validate balance
         if (sender.getBalance() < transaction.getAmount()) {
             return;
         }
 
-        // 🔹 Call Incentive API
         Incentive incentive = restTemplate.postForObject(
                 "http://localhost:8080/incentive",
                 transaction,
@@ -55,7 +52,6 @@ public class TransactionListener {
         double incentiveAmount =
                 incentive != null ? incentive.getAmount() : 0.0;
 
-        // 🔹 Update balances
         sender.setBalance(
         (float) (sender.getBalance() - transaction.getAmount())
 );
@@ -67,7 +63,6 @@ recipient.setBalance(
 );
 
 
-        // 🔹 Save transaction with incentive
         TransactionRecord record =
                 new TransactionRecord(
                         transaction.getAmount(),
